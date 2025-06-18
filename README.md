@@ -50,7 +50,7 @@ views/                # EJS views (admin dashboard, public pages)
 ### Installation
 1. Clone the repository:
    ```sh
-   git clone <repo-url>
+   git clone https://github.com/dailker/atrocity-watch-canada.git
    cd atrocitywatchcanada
    ```
 2. Install dependencies:
