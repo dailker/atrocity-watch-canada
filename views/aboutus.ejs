@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us - Atrocity Watch Canada</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body { background: #121212; color: #f5f5f7; font-family: 'Roboto', sans-serif; }
+        .matrix-font { font-family: 'Orbitron', sans-serif; }
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+            padding-left: 2rem;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #00ff9d 0%, #ff3b30 100%);
+            border-radius: 2px;
+        }
+        .timeline-event {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 2.5rem;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -0.2rem;
+            top: 0.3rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            background: #181818;
+            border: 4px solid #00ff9d;
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: 0 0 0 4px #121212;
+        }
+        .timeline-event:last-child { margin-bottom: 0; }
+        /* Board members */
+        .board-section {
+            background: #181818;
+            border: 1px solid #00ff9d;
+            border-radius: 1rem;
+            box-shadow: 0 6px 24px rgba(0,255,157,0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .board-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+        .board-card {
+            background: #232323;
+            border: 1px solid #00ff9d33;
+            border-radius: 0.75rem;
+            padding: 1.5rem 1rem;
+            min-width: 180px;
+            max-width: 220px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px #00ff9d11;
+        }
+        .board-card:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 8px 24px #00ff9d33;
+        }
+        .board-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid #00ff9d;
+            margin: 0 auto 0.5rem auto;
+            object-fit: cover;
+            background: #222;
+        }
+        /* Donor collage */
+        .donor-collage {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            min-height: 90px;
+            margin-bottom: 2rem;
+        }
+        .donor-img {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 2px solid #ff3b30;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s;
+            background: #232323;
+        }
+        .donor-img.active {
+            opacity: 1;
+        }
+        .donor-img.fading {
+            opacity: 0 !important;
+        }
+        @media (max-width: 768px) {
+            .donor-img { width: 48px; height: 48px; }
+        }
+        @media (max-width: 480px) {
+            .donor-img { width: 36px; height: 36px; }
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <div class="container mx-auto px-4 pt-32 pb-16">
+        <h1 class="text-4xl md:text-5xl font-bold matrix-font text-center text-green-400 mb-8">About Us</h1>
+        <div class="max-w-3xl mx-auto mb-12 bg-[#181818] rounded-lg shadow-lg p-8 border border-green-400/30">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <img src="https://www.gravatar.com/avatar/?d=mp&s=120" alt="Ilker Ozturk" class="rounded-full border-4 border-green-400 w-28 h-28 object-cover shadow-lg">
+                <div>
+                    <h2 class="text-2xl font-bold matrix-font text-green-400 mb-2">Founded by Ilker Ozturk</h2>
+                    <p class="text-lg mb-2">Atrocity Watch Canada was founded by Ilker Ozturk, a passionate advocate for human rights and justice. Driven by a vision to prevent atrocities and protect vulnerable communities, Ilker established this organization to monitor, document, and raise awareness about human rights violations worldwide.</p>
+                    <p class="text-sm text-green-300">"We believe that timely information and collective action can save lives and foster accountability." – Ilker Ozturk</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Board Members Section -->
+        <div class="board-section max-w-4xl mx-auto mb-12">
+            <h2 class="text-2xl font-bold matrix-font text-green-400 mb-6 text-center">Board Members</h2>
+            <div class="board-grid">
+                <div class="board-card">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="board-avatar" alt="Ilker Ozturk">
+                    <div class="matrix-font text-green-400 font-bold mt-2">Ilker Ozturk</div>
+                    <div class="text-gray-300 text-sm mb-1">Founder & Director</div>
+                    <div class="text-xs text-green-300">Human Rights Advocate</div>
+                </div>
+                <div class="board-card">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="board-avatar" alt="Jane Doe">
+                    <div class="matrix-font text-green-400 font-bold mt-2">Jane Doe</div>
+                    <div class="text-gray-300 text-sm mb-1">Research Lead</div>
+                    <div class="text-xs text-green-300">Policy Analyst</div>
+                </div>
+                <div class="board-card">
+                    <img src="https://randomuser.me/api/portraits/men/65.jpg" class="board-avatar" alt="John Smith">
+                    <div class="matrix-font text-green-400 font-bold mt-2">John Smith</div>
+                    <div class="text-gray-300 text-sm mb-1">Tech & Data</div>
+                    <div class="text-xs text-green-300">Data Scientist</div>
+                </div>
+                <div class="board-card">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" class="board-avatar" alt="Emily Zhang">
+                    <div class="matrix-font text-green-400 font-bold mt-2">Emily Zhang</div>
+                    <div class="text-gray-300 text-sm mb-1">Outreach Coordinator</div>
+                    <div class="text-xs text-green-300">Community Engagement</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Donor Collage Section -->
+        <div class="max-w-3xl mx-auto mb-12">
+            <h2 class="text-2xl font-bold matrix-font text-green-400 mb-6 text-center">Our Donors</h2>
+            <div class="donor-collage" id="donorCollage">
+                <!-- Donor images will be injected here -->
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold matrix-font text-green-400 mb-6 text-center">Our Milestones</h2>
+        <div class="timeline max-w-2xl mx-auto">
+            <!-- Timeline reversed: newest first -->
+            <div class="timeline-event">
+                <div class="timeline-dot"></div>
+                <div>
+                    <span class="matrix-font text-green-400 font-bold">2024</span>
+                    <h3 class="text-xl font-bold mt-1 mb-1">Technology-Driven Monitoring</h3>
+                    <p class="text-gray-300">Launch of a new digital platform for real-time atrocity monitoring and data visualization.</p>
+                </div>
+            </div>
+            <div class="timeline-event">
+                <div class="timeline-dot"></div>
+                <div>
+                    <span class="matrix-font text-green-400 font-bold">2023</span>
+                    <h3 class="text-xl font-bold mt-1 mb-1">Volunteer Network Established</h3>
+                    <p class="text-gray-300">A growing team of volunteers joins, expanding research, translation, and outreach capabilities.</p>
+                </div>
+            </div>
+            <div class="timeline-event">
+                <div class="timeline-dot"></div>
+                <div>
+                    <span class="matrix-font text-green-400 font-bold">2023</span>
+                    <h3 class="text-xl font-bold mt-1 mb-1">First Major Report Published</h3>
+                    <p class="text-gray-300">The organization publishes its first comprehensive report, gaining recognition among advocacy groups and media.</p>
+                </div>
+            </div>
+            <div class="timeline-event">
+                <div class="timeline-dot"></div>
+                <div>
+                    <span class="matrix-font text-green-400 font-bold">2022</span>
+                    <h3 class="text-xl font-bold mt-1 mb-1">Atrocity Watch Canada Founded</h3>
+                    <p class="text-gray-300">Ilker Ozturk launches Atrocity Watch Canada to monitor and report on atrocities and human rights abuses globally.</p>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-2xl mx-auto mt-12 text-center">
+            <h2 class="text-xl font-bold matrix-font text-green-400 mb-2">Our Mission</h2>
+            <p class="mb-4">To prevent atrocities and protect human rights by providing timely, accurate information and mobilizing collective action. We believe in the power of transparency, advocacy, and community engagement to make a difference.</p>
+            <a href="/get-involved" class="btn-primary px-6 py-2 rounded-md matrix-font font-bold bg-green-400 text-black hover:bg-green-500 transition">Get Involved</a>
+        </div>
+    </div>
+    <%- include('partials/footer') %>
+    <script>
+        // Optimized Animated Donor Collage: every 5s, pick 10 random donors to change, each with a random delay
+        const donors = [];
+        for (let i = 0; i < 100; i++) {
+            donors.push({
+                name: "Donor " + (i + 1),
+                img: `https://randomuser.me/api/portraits/${i % 2 === 0 ? 'men' : 'women'}/${(i % 90) + 1}.jpg`
+            });
+        }
+        const collage = document.getElementById('donorCollage');
+        let currentVisible = [];
+        let donorCount = 100;
+        let donorImgElements = [];
+
+        function getDonorCount() {
+            if (window.innerWidth <= 480) return 25;
+            if (window.innerWidth <= 1024) return 50;
+            return 100;
+        }
+
+        function getRandomDonorIndex(exclude) {
+            let idx;
+            let tries = 0;
+            do {
+                idx = Math.floor(Math.random() * donors.length);
+                tries++;
+                if (tries > 100) break;
+            } while (exclude.includes(idx));
+            return idx;
+        }
+
+        function renderDonors(indices) {
+            if (donorImgElements.length !== indices.length) {
+                collage.innerHTML = '';
+                donorImgElements = [];
+                indices.forEach(i => {
+                    const donor = donors[i];
+                    const img = document.createElement('img');
+                    img.src = donor.img;
+                    img.alt = donor.name;
+                    img.title = donor.name;
+                    img.className = 'donor-img active';
+                    collage.appendChild(img);
+                    donorImgElements.push(img);
+                });
+            } else {
+                for (let j = 0; j < indices.length; j++) {
+                    const donor = donors[indices[j]];
+                    const img = donorImgElements[j];
+                    img.src = donor.img;
+                    img.alt = donor.name;
+                    img.title = donor.name;
+                }
+            }
+        }
+
+        function changeDonorAtSlot(slot) {
+            if (donorImgElements.length === 0) return;
+            const exclude = [...currentVisible];
+            let newIdx = getRandomDonorIndex(exclude);
+            const img = donorImgElements[slot];
+            img.classList.remove('active');
+            img.classList.add('fading');
+            setTimeout(() => {
+                currentVisible[slot] = newIdx;
+                img.src = donors[newIdx].img;
+                img.alt = donors[newIdx].name;
+                img.title = donors[newIdx].name;
+                img.classList.remove('fading');
+                setTimeout(() => img.classList.add('active'), 20);
+            }, 1000);
+        }
+
+        function initializeDonors() {
+            donorCount = getDonorCount();
+            const idxs = [];
+            while (idxs.length < donorCount) {
+                let r = Math.floor(Math.random() * donors.length);
+                if (!idxs.includes(r)) idxs.push(r);
+            }
+            currentVisible = idxs;
+            renderDonors(currentVisible);
+        }
+
+        // Throttle resize to avoid excessive DOM updates
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                initializeDonors();
+            }, 200);
+        });
+
+        // Initial render
+        initializeDonors();
+
+        // Every 5s, pick 10 random donor slots and change them at random delays within the 5s window
+        function scheduleBatchDonorChange() {
+            setTimeout(() => {
+                if (donorImgElements.length === 0) return;
+                // Pick up to 10 unique random slots
+                const slots = [];
+                const maxSlots = Math.min(10, donorImgElements.length);
+                while (slots.length < maxSlots) {
+                    let r = Math.floor(Math.random() * donorImgElements.length);
+                    if (!slots.includes(r)) slots.push(r);
+                }
+                // For each slot, assign a random delay within 0-5s and change donor at that slot
+                slots.forEach(slot => {
+                    const delay = Math.floor(Math.random() * 5000);
+                    setTimeout(() => changeDonorAtSlot(slot), delay);
+                });
+                // Schedule next batch after 5s
+                scheduleBatchDonorChange();
+            }, 5000);
+        }
+        scheduleBatchDonorChange();
+    </script>
+</body>
+</html>

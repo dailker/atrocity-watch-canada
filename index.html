@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atrocity Watch Canada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary: #ff3b30;
+            --secondary: #00ff9d;
+            --dark: #121212;
+            --light: #f5f5f7;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .matrix-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .hero-section {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            object-fit: cover;
+            transition: opacity 0.5s ease-in-out;
+            z-index: -1;
+        }
+        
+        .hero-image.active {
+            opacity: 0.5;
+        }
+        
+        .glitch {
+            position: relative;
+            color: var(--light);
+            font-size: 4rem;
+            letter-spacing: 0.5rem;
+            animation: glitch-skew 1s infinite linear alternate-reverse;
+            transform-origin: center;
+        }
+        
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--secondary);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 var(--primary);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-anim {
+            0% {
+                clip: rect(31px, 9999px, 94px, 0);
+                transform: skew(0.65deg);
+            }
+            5% {
+                clip: rect(70px, 9999px, 71px, 0);
+                transform: skew(0.38deg);
+            }
+            10% {
+                clip: rect(33px, 9999px, 7px, 0);
+                transform: skew(0.96deg);
+            }
+            15% {
+                clip: rect(76px, 9999px, 94px, 0);
+                transform: skew(0.36deg);
+            }
+            20% {
+                clip: rect(42px, 9999px, 10px, 0);
+                transform: skew(0.56deg);
+            }
+            25% {
+                clip: rect(92px, 9999px, 61px, 0);
+                transform: skew(0.76deg);
+            }
+            30% {
+                clip: rect(5px, 9999px, 52px, 0);
+                transform: skew(0.69deg);
+            }
+            35% {
+                clip: rect(8px, 9999px, 81px, 0);
+                transform: skew(0.65deg);
+            }
+            40% {
+                clip: rect(51px, 9999px, 37px, 0);
+                transform: skew(0.2deg);
+            }
+            45% {
+                clip: rect(59px, 9999px, 2px, 0);
+                transform: skew(0.58deg);
+            }
+            50% {
+                clip: rect(31px, 9999px, 46px, 0);
+                transform: skew(0.24deg);
+            }
+            55% {
+                clip: rect(13px, 9999px, 76px, 0);
+                transform: skew(0.67deg);
+            }
+            60% {
+                clip: rect(62px, 9999px, 11px, 0);
+                transform: skew(0.03deg);
+            }
+            65% {
+                clip: rect(60px, 9999px, 76px, 0);
+                transform: skew(0.59deg);
+            }
+            70% {
+                clip: rect(24px, 9999px, 13px, 0);
+                transform: skew(0.32deg);
+            }
+            75% {
+                clip: rect(47px, 9999px, 7px, 0);
+                transform: skew(0.42deg);
+            }
+            80% {
+                clip: rect(41px, 9999px, 89px, 0);
+                transform: skew(0.53deg);
+            }
+            85% {
+                clip: rect(9px, 9999px, 38px, 0);
+                transform: skew(0.96deg);
+            }
+            90% {
+                clip: rect(23px, 9999px, 75px, 0);
+                transform: skew(0.07deg);
+            }
+            95% {
+                clip: rect(69px, 9999px, 23px, 0);
+                transform: skew(0.05deg);
+            }
+            100% {
+                clip: rect(8px, 9999px, 32px, 0);
+                transform: skew(0.58deg);
+            }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% {
+                clip: rect(65px, 9999px, 119px, 0);
+                transform: skew(0.02deg);
+            }
+            5% {
+                clip: rect(93px, 9999px, 53px, 0);
+                transform: skew(0.05deg);
+            }
+            10% {
+                clip: rect(137px, 9999px, 147px, 0);
+                transform: skew(0.95deg);
+            }
+            15% {
+                clip: rect(40px, 9999px, 137px, 0);
+                transform: skew(0.08deg);
+            }
+            20% {
+                clip: rect(143px, 9999px, 68px, 0);
+                transform: skew(0.03deg);
+            }
+            25% {
+                clip: rect(71px, 9999px, 46px, 0);
+                transform: skew(0.01deg);
+            }
+            30% {
+                clip: rect(2px, 9999px, 106px, 0);
+                transform: skew(0.3deg);
+            }
+            35% {
+                clip: rect(116px, 9999px, 138px, 0);
+                transform: skew(0.94deg);
+            }
+            40% {
+                clip: rect(115px, 9999px, 59px, 0);
+                transform: skew(0.29deg);
+            }
+            45% {
+                clip: rect(134px, 9999px, 117px, 0);
+                transform: skew(0.67deg);
+            }
+            50% {
+                clip: rect(53px, 9999px, 87px, 0);
+                transform: skew(0.5deg);
+            }
+            55% {
+                clip: rect(81px, 9999px, 82px, 0);
+                transform: skew(0.95deg);
+            }
+            60% {
+                clip: rect(139px, 9999px, 125px, 0);
+                transform: skew(0.9deg);
+            }
+            65% {
+                clip: rect(108px, 9999px, 97px, 0);
+                transform: skew(0.32deg);
+            }
+            70% {
+                clip: rect(19px, 9999px, 123px, 0);
+                transform: skew(0.55deg);
+            }
+            75% {
+                clip: rect(110px, 9999px, 131px, 0);
+                transform: skew(0.29deg);
+            }
+            80% {
+                clip: rect(55px, 9999px, 93px, 0);
+                transform: skew(0.73deg);
+            }
+            85% {
+                clip: rect(18px, 9999px, 148px, 0);
+                transform: skew(0.65deg);
+            }
+            90% {
+                clip: rect(142px, 9999px, 33px, 0);
+                transform: skew(0.5deg);
+            }
+            95% {
+                clip: rect(61px, 9999px, 113px, 0);
+                transform: skew(0.45deg);
+            }
+            100% {
+                clip: rect(138px, 9999px, 147px, 0);
+                transform: skew(0.02deg);
+            }
+        }
+        
+        @keyframes glitch-skew {
+            0% {
+                transform: skew(-0.5deg);
+            }
+            10% {
+                transform: skew(0.5deg);
+            }
+            20% {
+                transform: skew(0.8deg);
+            }
+            30% {
+                transform: skew(0.2deg);
+            }
+            40% {
+                transform: skew(-0.2deg);
+            }
+            50% {
+                transform: skew(-0.5deg);
+            }
+            60% {
+                transform: skew(0.3deg);
+            }
+            70% {
+                transform: skew(0.5deg);
+            }
+            80% {
+                transform: skew(-0.1deg);
+            }
+            90% {
+                transform: skew(-0.5deg);
+            }
+            100% {
+                transform: skew(0.2deg);
+            }
+        }
+        
+        .radar-section {
+            min-height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            position: relative;
+        }
+        
+        #map {
+            height: 70vh;
+            width: 100%;
+            background-color: #0a0a0a;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+            position: relative;
+        }
+        
+        .leaflet-container {
+            background: #000 !important;
+        }
+        
+        .stats-item {
+            border: 1px solid var(--secondary);
+            background-color: rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
+        }
+        
+        .stats-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 157, 0.3);
+        }
+        
+        .action-card {
+            border: 1px solid var(--primary);
+            background-color: rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 59, 48, 0.3);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff1a0e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 59, 48, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: black;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #00e68a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 157, 0.4);
+        }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            transition: right 0.3s ease-in-out;
+            border-left: 2px solid var(--secondary);
+            box-shadow: -5px 0 15px rgba(0, 255, 157, 0.3);
+        }
+        
+        .mobile-menu.open {
+            right: 0;
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+        
+        .menu-overlay.open {
+            display: block;
+        }
+        
+        /* Custom marker and heatmap styles */
+        .custom-marker {
+            background: transparent;
+            border: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .marker-pulse {
+            fill: none;
+            stroke-width: 2;
+            stroke-dasharray: 2 2;
+        }
+        
+        .heatmap-layer {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .heatmap-visible {
+            opacity: 1;
+        }
+        
+        /* Scroll animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00cc7d;
+        }
+        
+        /* Map info box */
+        .map-info-box {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--secondary);
+            padding: 10px 15px;
+            border-radius: 4px;
+            z-index: 500;
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+            text-align: center;
+            width: 300px;
+            margin-top: -1px; /* Align with top border */
+        }
+        
+        /* Incident detail modal */
+        .incident-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow-y: auto;
+        }
+        
+        .incident-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--primary);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            transform: scale(1.1);
+        }
+        
+        .typewriter-container {
+            min-height: 200px;
+            border: 1px solid var(--secondary);
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        .typewriter-text {
+            font-family: 'Courier New', monospace;
+            color: var(--secondary);
+            overflow: hidden;
+            position: relative;
+            white-space: pre-wrap;
+            margin: 0;
+            letter-spacing: 0.05em;
+            line-height: 1.5;
+        }
+        
+        .typewriter-text::after {
+            content: '|';
+            position: absolute;
+            display: inline-block;
+            color: var(--secondary);
+            opacity: 1;
+            animation: blink 0.7s infinite;
+            font-weight: normal;
+            height: 1em;
+            width: 0.5em;
+            margin-left: 1px;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .incident-details {
+            margin-top: 30px;
+        }
+        
+        .detail-item {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+        
+        .detail-label {
+            width: 150px;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        .detail-value {
+            flex: 1;
+        }
+        
+        .severity-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .severity-critical {
+            background-color: #ff0000;
+        }
+        
+        .severity-high {
+            background-color: #ff3b30;
+        }
+        
+        .severity-medium {
+            background-color: #ff9500;
+        }
+        
+        .severity-low {
+            background-color: #ffcc00;
+        }
+        
+        /* Map container wrapper for positioning */
+        .map-container {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-opacity-20 bg-black backdrop-blur-md border-b border-green-400/30">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="mr-2">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="20" cy="20" r="19" stroke="#00ff9d" stroke-width="2"/>
+                            <circle cx="20" cy="20" r="15" stroke="#ff3b30" stroke-width="1" stroke-dasharray="2 2">
+                                <animate attributeName="r" values="15;18;15" dur="3s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="1;0.6;1" dur="3s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="20" cy="20" r="10" fill="#ff3b30" fill-opacity="0.3"/>
+                            <circle cx="20" cy="20" r="5" fill="#ff3b30"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-white text-xl md:text-2xl font-bold matrix-font">ATROCITY WATCH <span class="text-red-500">CANADA</span></h1>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#" class="text-white hover:text-green-400 transition-colors matrix-font">HOME</a>
+                    <a href="#radar" class="text-white hover:text-green-400 transition-colors matrix-font">RADAR</a>
+                    <a href="#statistics" class="text-white hover:text-green-400 transition-colors matrix-font">STATISTICS</a>
+                    <a href="#action" class="text-white hover:text-green-400 transition-colors matrix-font">TAKE ACTION</a>
+                    <a href="#about" class="text-white hover:text-green-400 transition-colors matrix-font">ABOUT US</a>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div class="menu-overlay"></div>
+    <div class="mobile-menu">
+        <div class="p-4 flex justify-end">
+            <button id="close-menu-button" class="text-white focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <nav class="flex flex-col space-y-4 p-4">
+            <a href="#" class="text-white hover:text-green-400 transition-colors matrix-font text-xl py-2 border-b border-green-400/30">HOME</a>
+            <a href="#radar" class="text-white hover:text-green-400 transition-colors matrix-font text-xl py-2 border-b border-green-400/30">RADAR</a>
+            <a href="#statistics" class="text-white hover:text-green-400 transition-colors matrix-font text-xl py-2 border-b border-green-400/30">STATISTICS</a>
+            <a href="#action" class="text-white hover:text-green-400 transition-colors matrix-font text-xl py-2 border-b border-green-400/30">TAKE ACTION</a>
+            <a href="#about" class="text-white hover:text-green-400 transition-colors matrix-font text-xl py-2 border-b border-green-400/30">ABOUT US</a>
+        </nav>
+        <div class="absolute bottom-10 left-0 w-full px-4">
+            <div class="flex justify-center space-x-4">
+                <a href="#" class="text-white hover:text-green-400">
+                    <i class="fab fa-twitter text-xl"></i>
+                </a>
+                <a href="#" class="text-white hover:text-green-400">
+                    <i class="fab fa-facebook text-xl"></i>
+                </a>
+                <a href="#" class="text-white hover:text-green-400">
+                    <i class="fab fa-instagram text-xl"></i>
+                </a>
+                <a href="#" class="text-white hover:text-green-400">
+                    <i class="fab fa-linkedin text-xl"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hero Section with Image Slider -->
+    <section class="hero-section flex items-center justify-center">
+        <div class="hero-image active" style="background: url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;"></div>
+        <div class="hero-image" style="background: url('https://images.unsplash.com/photo-1603738276321-efe7a8ee2e9c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;"></div>
+        <div class="hero-image" style="background: url('https://images.unsplash.com/photo-1607923432780-7a9c30adcb5b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;"></div>
+        
+        <div class="container mx-auto px-4 text-center z-10">
+            <h1 class="glitch matrix-font mb-6" data-text="ATROCITY WATCH">ATROCITY WATCH</h1>
+            <div id="slogan-container" class="mb-12">
+                <p class="text-2xl md:text-3xl font-light mb-8 slogan active">Monitoring Human Rights Violations Worldwide</p>
+                <p class="text-2xl md:text-3xl font-light mb-8 slogan hidden">Bearing Witness When The World Looks Away</p>
+                <p class="text-2xl md:text-3xl font-light mb-8 slogan hidden">Documenting Injustice To Prevent Future Atrocities</p>
+            </div>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <a href="#radar" class="btn-primary px-8 py-3 rounded-md text-lg font-semibold matrix-font">VIEW RADAR</a>
+                <a href="#action" class="btn-secondary px-8 py-3 rounded-md text-lg font-semibold matrix-font">TAKE ACTION</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Radar Section -->
+    <section id="radar" class="radar-section py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold matrix-font text-center mb-12 fade-in">ATROCITY <span class="text-red-500">RADAR</span></h2>
+            <p class="text-xl text-center mb-12 max-w-3xl mx-auto fade-in">Real-time monitoring of human rights violations and atrocities occurring worldwide. Our radar identifies and tracks incidents to raise awareness and prompt action.</p>
+            
+            <div class="fade-in relative map-container">
+                <!-- Map info box positioned above the map -->
+                <div class="map-info-box">
+                    <h3 class="matrix-font text-red-500 text-lg font-bold">ATROCITY WATCH MATRIX</h3>
+                    <p class="text-sm text-gray-300">MONITORING ACTIVE INCIDENTS: <span id="incident-count" class="text-red-500 font-bold">8</span></p>
+                </div>
+                
+                <div id="map" class="rounded-lg overflow-hidden mt-8">
+                    <!-- Map will be rendered here -->
+                </div>
+            </div>
+            
+            <div class="mt-8 text-sm text-gray-400 text-center fade-in">
+                <p>Click on markers to view detailed information. Zoom in to see heat maps of affected areas.</p>
+                <p class="mt-2"><span class="text-red-500">Red</span> indicates active situations. <span class="text-yellow-500">Yellow</span> indicates monitoring. <span class="text-green-500">Green</span> indicates improving conditions.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Incident Detail Modal -->
+    <div id="incident-modal" class="incident-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="incident-title" class="text-3xl font-bold matrix-font text-red-500"></h2>
+                <button class="close-modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18" stroke="#ff3b30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M6 6L18 18" stroke="#ff3b30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="typewriter-container">
+                <p id="typewriter-text" class="typewriter-text"></p>
+            </div>
+            
+            <div class="incident-details">
+                <div class="detail-item">
+                    <div class="detail-label">Location:</div>
+                    <div id="incident-location" class="detail-value"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Severity:</div>
+                    <div id="incident-severity" class="detail-value"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Type:</div>
+                    <div id="incident-type" class="detail-value"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Affected Population:</div>
+                    <div id="incident-affected" class="detail-value"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Status:</div>
+                    <div id="incident-status" class="detail-value"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Last Updated:</div>
+                    <div id="incident-updated" class="detail-value"></div>
+                </div>
+            </div>
+            
+            <div class="mt-8 flex justify-center">
+                <button id="view-report-btn" class="btn-primary px-8 py-3 rounded-md text-lg font-semibold matrix-font mr-4">VIEW FULL REPORT</button>
+                <button id="take-action-btn" class="btn-secondary px-8 py-3 rounded-md text-lg font-semibold matrix-font">TAKE ACTION</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics Section -->
+    <section id="statistics" class="py-20 bg-gradient-to-b from-black to-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold matrix-font text-center mb-12 fade-in">IMPACT <span class="text-green-400">STATISTICS</span></h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="stats-item rounded-lg p-6 text-center fade-in">
+                    <div class="text-5xl font-bold text-green-400 mb-2 counter" data-target="87">0</div>
+                    <div class="text-xl matrix-font">Countries Monitored</div>
+                </div>
+                
+                <div class="stats-item rounded-lg p-6 text-center fade-in">
+                    <div class="text-5xl font-bold text-green-400 mb-2 counter" data-target="342">0</div>
+                    <div class="text-xl matrix-font">Reports Published</div>
+                </div>
+                
+                <div class="stats-item rounded-lg p-6 text-center fade-in">
+                    <div class="text-5xl font-bold text-green-400 mb-2 counter" data-target="1893">0</div>
+                    <div class="text-xl matrix-font">Incidents Documented</div>
+                </div>
+                
+                <div class="stats-item rounded-lg p-6 text-center fade-in">
+                    <div class="text-5xl font-bold text-green-400 mb-2 counter" data-target="53">0</div>
+                    <div class="text-xl matrix-font">Policy Changes Influenced</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Take Action Section -->
+    <section id="action" class="py-20 bg-gradient-to-b from-gray-900 to-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold matrix-font text-center mb-12 fade-in">TAKE <span class="text-red-500">ACTION</span></h2>
+            <p class="text-xl text-center mb-12 max-w-3xl mx-auto fade-in">Join our efforts to prevent atrocities and protect human rights worldwide. There are many ways you can contribute to making a difference.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="action-card rounded-lg p-6 fade-in">
+                    <div class="text-red-500 text-4xl mb-4">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold matrix-font mb-3">Spread Awareness</h3>
+                    <p class="mb-6">Share our reports and findings on social media to raise awareness about ongoing atrocities and human rights violations.</p>
+                    <a href="#" class="btn-primary inline-block px-6 py-2 rounded-md">Learn More</a>
+                </div>
+                
+                <div class="action-card rounded-lg p-6 fade-in">
+                    <div class="text-red-500 text-4xl mb-4">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold matrix-font mb-3">Donate</h3>
+                    <p class="mb-6">Support our monitoring and documentation efforts with a one-time or recurring donation to fund our operations.</p>
+                    <a href="#" class="btn-primary inline-block px-6 py-2 rounded-md">Donate Now</a>
+                </div>
+                
+                <div class="action-card rounded-lg p-6 fade-in">
+                    <div class="text-red-500 text-4xl mb-4">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold matrix-font mb-3">Volunteer</h3>
+                    <p class="mb-6">Join our team of volunteers to help with research, translation, outreach, and other critical tasks.</p>
+                    <a href="#" class="btn-primary inline-block px-6 py-2 rounded-md">Join Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-black py-12 border-t border-green-400/30">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <h3 class="text-xl font-bold matrix-font text-white mb-4">Atrocity Watch Canada</h3>
+                    <p class="text-gray-400 mb-4">Monitoring, documenting, and preventing human rights violations and atrocities worldwide.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white hover:text-green-400">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-green-400">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-green-400">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-green-400">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold matrix-font text-white mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-green-400">Home</a></li>
+                        <li><a href="#radar" class="text-gray-400 hover:text-green-400">Radar</a></li>
+                        <li><a href="#statistics" class="text-gray-400 hover:text-green-400">Statistics</a></li>
+                        <li><a href="#action" class="text-gray-400 hover:text-green-400">Take Action</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-green-400">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold matrix-font text-white mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-green-400">Reports</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-400">Publications</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-400">Press Releases</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-400">Testimonials</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-400">Media Kit</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold matrix-font text-white mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-green-400 mt-1 mr-2"></i>
+                            <span class="text-gray-400">123 Human Rights Ave, Ottawa, ON K1A 0A9</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope text-green-400 mt-1 mr-2"></i>
+                            <span class="text-gray-400">info@atrocitywatchcanada.org</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone text-green-400 mt-1 mr-2"></i>
+                            <span class="text-gray-400">+1 (613) 555-0123</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 text-center">
+                <p class="text-gray-500">&copy; 2023 Atrocity Watch Canada. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMenuButton = document.getElementById('close-menu-button');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            menuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            menuOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        });
+        
+        menuOverlay.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            menuOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        });
+        
+        // Hero Image Slider with Glitch Effect
+        const heroImages = document.querySelectorAll('.hero-image');
+        const slogans = document.querySelectorAll('.slogan');
+        let currentImageIndex = 0;
+        
+        function changeHeroImage() {
+            // Hide all images and slogans
+            heroImages.forEach(img => img.classList.remove('active'));
+            slogans.forEach(slogan => slogan.classList.add('hidden'));
+            slogans.forEach(slogan => slogan.classList.remove('active'));
+            
+            // Show next image and slogan
+            currentImageIndex = (currentImageIndex + 1) % heroImages.length;
+            heroImages[currentImageIndex].classList.add('active');
+            slogans[currentImageIndex].classList.remove('hidden');
+            slogans[currentImageIndex].classList.add('active');
+        }
+        
+        // Change image every 5 seconds
+        setInterval(changeHeroImage, 5000);
+        
+        // Smooth scroll function
+        function smoothScrollTo(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                window.scrollTo({
+                    top: element.offsetTop - 80, // Offset for header
+                    behavior: 'smooth'
+                });
+            }
+        }
+        
+        // Atrocity Data with extended information
+        const atrocityData = [
+            {
+                title: "Ethnic Conflict",
+                description: "Ongoing ethnic violence affecting civilian populations with reports of targeted killings and displacement.",
+                location: [8.7832, 34.5085], // South Sudan
+                severity: "high",
+                type: "conflict",
+                affected: "Approximately 2.2 million people",
+                status: "Active - Ongoing violence",
+                updated: "2023-11-15",
+                detailedDescription: "The conflict in South Sudan has resulted in widespread ethnic violence, with targeted attacks against civilian populations based on their ethnic identity. Reports indicate systematic human rights abuses including extrajudicial killings, sexual violence, and forced displacement. Humanitarian access remains severely restricted in many areas, exacerbating food insecurity and limiting medical assistance to affected populations.",
+                heatmap: [
+                    {long: 8.8, lat: 34.5, affected: 80},
+                    {long: 8.75, lat: 34.55, affected: 60},
+                    {long: 8.9, lat: 34.48, affected: 70},
+                    {long: 8.7, lat: 34.6, affected: 50},
+                    {long: 8.85, lat: 34.4, affected: 65}
+                ]
+            },
+            {
+                title: "Political Repression",
+                description: "Systematic suppression of political opposition, including arbitrary detentions and restrictions on free speech.",
+                location: [21.9162, 95.9560], // Myanmar
+                severity: "high",
+                type: "repression",
+                affected: "Over 1.5 million people",
+                status: "Active - Intensifying",
+                updated: "2023-11-20",
+                detailedDescription: "Following the military coup, authorities have engaged in widespread repression of political opposition and civil society. Documented abuses include arbitrary arrests, enforced disappearances, torture in detention, and extrajudicial killings. Independent media has been effectively dismantled, with journalists facing prosecution under newly expanded security laws. Internet blackouts and surveillance have been deployed to suppress organizing and information sharing. International observers have been denied access to affected regions.",
+                heatmap: [
+                    {long: 21.92, lat: 95.96, affected: 90},
+                    {long: 21.85, lat: 95.90, affected: 75},
+                    {long: 22.0, lat: 96.0, affected: 85},
+                    {long: 21.8, lat: 96.1, affected: 70},
+                    {long: 22.1, lat: 95.85, affected: 80}
+                ]
+            },
+            {
+                title: "Humanitarian Crisis",
+                description: "Severe food insecurity and limited access to healthcare affecting vulnerable populations.",
+                location: [15.5527, 48.5164], // Yemen
+                severity: "critical",
+                type: "humanitarian",
+                affected: "More than 20.7 million people",
+                status: "Critical - Deteriorating",
+                updated: "2023-11-18",
+                detailedDescription: "Yemen continues to face one of the world's worst humanitarian crises, with two-thirds of the population requiring humanitarian assistance. The protracted conflict has devastated healthcare infrastructure, with less than half of facilities fully operational. Severe food insecurity affects millions, with children particularly vulnerable to acute malnutrition. Cholera and other preventable diseases have spread due to limited access to clean water and sanitation. Blockades and restrictions on humanitarian access have severely hampered aid delivery to the most affected areas.",
+                heatmap: [
+                    {long: 15.55, lat: 48.52, affected: 95},
+                    {long: 15.50, lat: 48.48, affected: 90},
+                    {long: 15.60, lat: 48.55, affected: 85},
+                    {long: 15.45, lat: 48.6, affected: 80},
+                    {long: 15.65, lat: 48.45, affected: 88}
+                ]
+            },
+            {
+                title: "Armed Conflict",
+                description: "Ongoing military operations with significant civilian casualties and destruction of infrastructure.",
+                location: [34.8021, 38.9968], // Syria
+                severity: "high",
+                type: "conflict",
+                affected: "13.4 million people",
+                status: "Active - Ongoing hostilities",
+                updated: "2023-11-12",
+                detailedDescription: "The protracted conflict in Syria continues to result in civilian casualties and widespread destruction of critical infrastructure. Indiscriminate attacks on civilian areas, including the use of explosive weapons in populated areas, have been documented across multiple regions. Healthcare facilities and schools have been repeatedly targeted, contrary to international humanitarian law. Displacement remains a critical issue, with millions forced from their homes and facing dire conditions in informal settlements. The use of siege tactics has restricted civilian movement and humanitarian access in several areas.",
+                heatmap: [
+                    {long: 34.80, lat: 39.0, affected: 85},
+                    {long: 34.75, lat: 38.95, affected: 80},
+                    {long: 34.85, lat: 39.05, affected: 75},
+                    {long: 34.7, lat: 38.9, affected: 70},
+                    {long: 34.9, lat: 39.1, affected: 65}
+                ]
+            },
+            {
+                title: "Forced Displacement",
+                description: "Mass displacement of populations due to violence and persecution.",
+                location: [9.1450, 40.4897], // Ethiopia
+                severity: "high",
+                type: "displacement",
+                affected: "Approximately 4.2 million people",
+                status: "Active - Ongoing crisis",
+                updated: "2023-11-10",
+                detailedDescription: "Conflict in multiple regions of Ethiopia has led to one of the world's largest displacement crises. Civilians have been forced to flee their homes due to targeted violence, destruction of property, and threats to their safety. Many displaced persons lack access to basic necessities including shelter, food, water, and healthcare. Reports indicate that displacement has been used as a deliberate tactic in the conflict, with entire communities forced to leave areas based on their ethnicity. Humanitarian access remains severely restricted in many affected regions, leaving displaced populations without adequate assistance.",
+                heatmap: [
+                    {long: 9.15, lat: 40.49, affected: 70},
+                    {long: 9.10, lat: 40.45, affected: 65},
+                    {long: 9.20, lat: 40.52, affected: 75},
+                    {long: 9.05, lat: 40.4, affected: 60},
+                    {long: 9.25, lat: 40.55, affected: 68}
+                ]
+            },
+            {
+                title: "Religious Persecution",
+                description: "Targeted discrimination and violence against religious minorities.",
+                location: [30.3753, 69.3451], // Pakistan
+                severity: "medium",
+                type: "persecution",
+                affected: "Approximately 3.8 million people",
+                status: "Active - Ongoing concern",
+                updated: "2023-11-05",
+                detailedDescription: "Religious minorities continue to face systematic discrimination, legal persecution, and targeted violence. Blasphemy laws have been disproportionately applied against minority communities, resulting in arbitrary detention and denial of due process. Places of worship have been attacked, with inadequate security provided by authorities despite known threats. Forced conversions, particularly affecting women and girls from minority communities, remain a serious concern. Community leaders report increasing social ostracization and economic marginalization based on religious identity.",
+                heatmap: [
+                    {long: 30.38, lat: 69.35, affected: 60},
+                    {long: 30.35, lat: 69.30, affected: 55},
+                    {long: 30.40, lat: 69.38, affected: 65},
+                    {long: 30.32, lat: 69.25, affected: 50},
+                    {long: 30.45, lat: 69.4, affected: 58}
+                ]
+            },
+            {
+                title: "Gender-Based Violence",
+                description: "Systematic violence targeting women and girls in conflict zones.",
+                location: [17.5707, 8.0819], // Niger
+                severity: "high",
+                type: "violence",
+                affected: "Over 1.7 million women and girls",
+                status: "Active - Increasing incidents",
+                updated: "2023-11-08",
+                detailedDescription: "Women and girls in conflict-affected regions face heightened risks of sexual violence, with rape being used as a weapon of war by multiple armed groups. Abductions for forced marriage and sexual slavery have been documented across several provinces. Survivors face significant barriers to accessing medical care and psychosocial support, with services severely limited in affected areas. Stigmatization of survivors has led to social exclusion and further vulnerability. Impunity remains pervasive, with few perpetrators facing investigation or prosecution despite widespread documentation of abuses.",
+                heatmap: [
+                    {long: 17.57, lat: 8.08, affected: 75},
+                    {long: 17.52, lat: 8.05, affected: 70},
+                    {long: 17.60, lat: 8.10, affected: 80},
+                    {long: 17.48, lat: 8.0, affected: 65},
+                    {long: 17.65, lat: 8.15, affected: 72}
+                ]
+            },
+            {
+                title: "Child Soldiers",
+                description: "Recruitment and use of children in armed conflicts.",
+                location: [6.8770, 21.1889], // Central African Republic
+                severity: "critical",
+                type: "children",
+                affected: "Estimated 8,000-14,000 children",
+                status: "Critical - Ongoing violations",
+                updated: "2023-11-14",
+                detailedDescription: "Armed groups continue to recruit and use children in active combat and support roles, with some children as young as eight years old being forcibly conscripted. Children are subjected to brutal indoctrination processes, including being forced to commit violence against their own communities. Girls recruited by armed groups face additional gender-based violence, including sexual slavery and forced marriage. Reintegration programs remain severely underfunded, leaving former child soldiers without adequate support for recovery and community reintegration. Many children face rejection from their communities upon return, compounding their trauma and vulnerability.",
+                heatmap: [
+                    {long: 6.88, lat: 21.19, affected: 85},
+                    {long: 6.85, lat: 21.15, affected: 80},
+                    {long: 6.90, lat: 21.22, affected: 90},
+                    {long: 6.82, lat: 21.1, affected: 75},
+                    {long: 6.95, lat: 21.25, affected: 82}
+                ]
+            }
+        ];
+        
+        // Initialize Map
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize map
+            const map = L.map('map', {
+                center: [20, 0],
+                zoom: 2,
+                minZoom: 2,
+                maxZoom: 10,
+                zoomControl: true,
+                scrollWheelZoom: true
+            });
+            
+            // Add dark theme map tiles
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(map);
+            
+            // Create SVG overlay for heatmap
+            const heatmapOverlay = L.svg().addTo(map);
+            const heatmapContainer = heatmapOverlay._container;
+            heatmapContainer.setAttribute('class', 'heatmap-layer');
+            heatmapContainer.style.pointerEvents = 'none';
+            
+            // Custom icon for markers
+            const createCustomIcon = (severity) => {
+                let color;
+                switch(severity) {
+                    case 'critical':
+                        color = '#ff0000';
+                        break;
+                    case 'high':
+                        color = '#ff3b30';
+                        break;
+                    case 'medium':
+                        color = '#ff9500';
+                        break;
+                    default:
+                        color = '#ffcc00';
+                }
+                
+                return L.divIcon({
+                    html: `
+                        <svg width="50" height="50" viewBox="0 0 50 50" class="marker-svg">
+                            <circle cx="25" cy="25" r="8" fill="${color}" class="marker-center" />
+                            <circle cx="25" cy="25" r="15" stroke="${color}" stroke-width="2" stroke-dasharray="2 2" fill="none" class="marker-pulse">
+                                <animate attributeName="r" values="15;25;15" dur="4s" repeatCount="indefinite"></animate>
+                                <animate attributeName="opacity" values="1;0;1" dur="4s" repeatCount="indefinite"></animate>
+                            </circle>
+                        </svg>
+                    `,
+                    className: 'custom-marker',
+                    iconSize: [50, 50],
+                    iconAnchor: [25, 25]
+                });
+            };
+            
+            // Store markers for later reference
+            const markers = [];
+            
+            // Incident modal elements
+            const incidentModal = document.getElementById('incident-modal');
+            const closeModalBtn = document.querySelector('.close-modal');
+            const incidentTitle = document.getElementById('incident-title');
+            const typewriterText = document.getElementById('typewriter-text');
+            const incidentLocation = document.getElementById('incident-location');
+            const incidentSeverity = document.getElementById('incident-severity');
+            const incidentType = document.getElementById('incident-type');
+            const incidentAffected = document.getElementById('incident-affected');
+            const incidentStatus = document.getElementById('incident-status');
+            const incidentUpdated = document.getElementById('incident-updated');
+            const viewReportBtn = document.getElementById('view-report-btn');
+            const takeActionBtn = document.getElementById('take-action-btn');
+            
+            // Close modal function
+            function closeModal() {
+                incidentModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            // Close modal on button click
+            closeModalBtn.addEventListener('click', closeModal);
+            
+            // Close modal on ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && incidentModal.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+            
+            // Modal action buttons
+            viewReportBtn.addEventListener('click', () => {
+                closeModal();
+                smoothScrollTo('statistics');
+            });
+            
+            takeActionBtn.addEventListener('click', () => {
+                closeModal();
+                smoothScrollTo('action');
+            });
+            
+            // Improved typewriter effect function with proper cursor
+            function typeWriter(text, element, speed = 30) {
+                element.textContent = '';
+                let i = 0;
+                
+                function type() {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    }
+                }
+                
+                type();
+            }
+            
+            // Add markers to map
+            atrocityData.forEach(incident => {
+                const marker = L.marker(incident.location, {
+                    icon: createCustomIcon(incident.severity)
+                }).addTo(map);
+                
+                // Store marker with its data
+                markers.push({
+                    marker: marker,
+                    data: incident
+                });
+                
+                // Add click event to open modal with incident details
+                marker.on('click', () => {
+                    // Set modal content
+                    incidentTitle.textContent = incident.title;
+                    
+                    // Set location with country name
+                    let countryName;
+                    switch(true) {
+                        case incident.location[0] === 8.7832 && incident.location[1] === 34.5085:
+                            countryName = "South Sudan";
+                            break;
+                        case incident.location[0] === 21.9162 && incident.location[1] === 95.9560:
+                            countryName = "Myanmar";
+                            break;
+                        case incident.location[0] === 15.5527 && incident.location[1] === 48.5164:
+                            countryName = "Yemen";
+                            break;
+                        case incident.location[0] === 34.8021 && incident.location[1] === 38.9968:
+                            countryName = "Syria";
+                            break;
+                        case incident.location[0] === 9.1450 && incident.location[1] === 40.4897:
+                            countryName = "Ethiopia";
+                            break;
+                        case incident.location[0] === 30.3753 && incident.location[1] === 69.3451:
+                            countryName = "Pakistan";
+                            break;
+                        case incident.location[0] === 17.5707 && incident.location[1] === 8.0819:
+                            countryName = "Niger";
+                            break;
+                        case incident.location[0] === 6.8770 && incident.location[1] === 21.1889:
+                            countryName = "Central African Republic";
+                            break;
+                        default:
+                            countryName = "Unknown";
+                    }
+                    
+                    incidentLocation.textContent = countryName;
+                    
+                    // Set severity with indicator
+                    const severityClass = `severity-${incident.severity}`;
+                    incidentSeverity.innerHTML = `<span class="severity-indicator ${severityClass}"></span> ${incident.severity.charAt(0).toUpperCase() + incident.severity.slice(1)}`;
+                    
+                    // Set other details
+                    incidentType.textContent = incident.type.charAt(0).toUpperCase() + incident.type.slice(1);
+                    incidentAffected.textContent = incident.affected;
+                    incidentStatus.textContent = incident.status;
+                    
+                    // Format date
+                    const date = new Date(incident.updated);
+                    const formattedDate = date.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    incidentUpdated.textContent = formattedDate;
+                    
+                    // Show modal
+                    incidentModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    
+                    // Start typewriter effect
+                    typeWriter(incident.detailedDescription, typewriterText, 20);
+                });
+            });
+            
+            // Function to update heatmap based on zoom level
+            function updateHeatmap() {
+                // Clear existing heatmap
+                while (heatmapContainer.firstChild) {
+                    heatmapContainer.removeChild(heatmapContainer.firstChild);
+                }
+                
+                const currentZoom = map.getZoom();
+                
+                // Toggle visibility of markers and heatmap based on zoom level
+                markers.forEach(({marker, data}) => {
+                    const markerElement = marker.getElement();
+                    
+                    if (currentZoom >= 4) {
+                        // Hide markers at zoom level 4+
+                        if (markerElement) {
+                            const svgElement = markerElement.querySelector('.marker-svg');
+                            if (svgElement) {
+                                svgElement.style.opacity = '0';
+                            }
+                        }
+                    } else {
+                        // Show markers at zoom level 0-3
+                        if (markerElement) {
+                            const svgElement = markerElement.querySelector('.marker-svg');
+                            if (svgElement) {
+                                svgElement.style.opacity = '1';
+                            }
+                        }
+                    }
+                });
+                
+                // Only show heatmap at zoom level 4 or higher
+                if (currentZoom >= 4) {
+                    heatmapContainer.classList.add('heatmap-visible');
+                    
+                    // Create heatmap for each incident
+                    markers.forEach(({marker, data}) => {
+                        // Only create heatmap for markers in the current view
+                        if (map.getBounds().contains(marker.getLatLng())) {
+                            // Get color based on severity
+                            let color;
+                            switch(data.severity) {
+                                case 'critical':
+                                    color = '#ff0000';
+                                    break;
+                                case 'high':
+                                    color = '#ff3b30';
+                                    break;
+                                case 'medium':
+                                    color = '#ff9500';
+                                    break;
+                                default:
+                                    color = '#ffcc00';
+                            }
+                            
+                            // Create heatmap group
+                            const heatmapGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                            
+                            // Create gradient definitions if they don't exist
+                            if (!document.getElementById(`gradient-${data.severity}-${data.type}`)) {
+                                const defs = document.getElementById('heatmap-gradients') || document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                                if (!defs.id) {
+                                    defs.id = 'heatmap-gradients';
+                                    heatmapContainer.appendChild(defs);
+                                }
+                                
+                                const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
+                                gradient.id = `gradient-${data.severity}-${data.type}`;
+                                gradient.setAttribute('cx', '50%');
+                                gradient.setAttribute('cy', '50%');
+                                gradient.setAttribute('r', '50%');
+                                
+                                const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                                stop1.setAttribute('offset', '0%');
+                                stop1.setAttribute('stop-color', color);
+                                stop1.setAttribute('stop-opacity', '0.8');
+                                
+                                const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                                stop2.setAttribute('offset', '50%');
+                                stop2.setAttribute('stop-color', color);
+                                stop2.setAttribute('stop-opacity', '0.4');
+                                
+                                const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                                stop3.setAttribute('offset', '100%');
+                                stop3.setAttribute('stop-color', color);
+                                stop3.setAttribute('stop-opacity', '0');
+                                
+                                gradient.appendChild(stop1);
+                                gradient.appendChild(stop2);
+                                gradient.appendChild(stop3);
+                                defs.appendChild(gradient);
+                            }
+                            
+                            // Add heatmap points
+                            data.heatmap.forEach(point => {
+                                const latLng = L.latLng(point.lat, point.long);
+                                const pointPos = map.latLngToLayerPoint(latLng);
+                                
+                                // Calculate radius based on zoom level and affected value
+                                const zoomFactor = Math.pow(1.5, currentZoom - 4); // Increase size with zoom
+                                const baseRadius = point.affected / 4 * zoomFactor;
+                                
+                                // Create gradient radial heatmap point
+                                const heatCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                                heatCircle.setAttribute('cx', pointPos.x);
+                                heatCircle.setAttribute('cy', pointPos.y);
+                                heatCircle.setAttribute('r', baseRadius);
+                                heatCircle.setAttribute('fill', `url(#gradient-${data.severity}-${data.type})`);
+                                heatCircle.setAttribute('opacity', '0.7');
+                                
+                                heatmapGroup.appendChild(heatCircle);
+                            });
+                            
+                            // Add the group to the container
+                            heatmapContainer.appendChild(heatmapGroup);
+                        }
+                    });
+                } else {
+                    heatmapContainer.classList.remove('heatmap-visible');
+                }
+            }
+            
+            // Update heatmap on zoom and move
+            map.on('zoomend', updateHeatmap);
+            map.on('moveend', updateHeatmap);
+            
+            // Initial update
+            updateHeatmap();
+            
+            // Handle map responsiveness
+            function handleMapResponsiveness() {
+                const isMobile = window.innerWidth < 768;
+                map.scrollWheelZoom.disable();
+                
+                if (!isMobile) {
+                    map.scrollWheelZoom.enable();
+                }
+            }
+            
+            handleMapResponsiveness();
+            window.addEventListener('resize', handleMapResponsiveness);
+            
+            // Fade-in animation for elements
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Counter animation
+            const counters = document.querySelectorAll('.counter');
+            const counterSpeed = 200; // Lower is faster
+            
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = parseInt(counter.getAttribute('data-target'));
+                        const count = parseInt(counter.innerText);
+                        const increment = Math.trunc(target / (2000 / counterSpeed));
+                        
+                        if (count < target) {
+                            counter.innerText = count + increment;
+                            setTimeout(() => {
+                                // Recursively call until we reach the target
+                                counterObserver.observe(counter);
+                            }, counterSpeed);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            counters.forEach(counter => {
+                counterObserver.observe(counter);
+            });
+            
+            // Scroll animation for hero section
+            const heroSection = document.querySelector('.hero-section');
+            
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.scrollY;
+                const heroHeight = heroSection.offsetHeight;
+                
+                if (scrollPosition < heroHeight) {
+                    const scale = 1 - (scrollPosition / heroHeight) * 0.3;
+                    const opacity = 1 - (scrollPosition / (heroHeight * 0.7));
+                    
+                    heroSection.style.transform = `scale(${scale})`;
+                    heroSection.style.opacity = opacity;
+                }
+            });
+            
+            // Update incident count in the map info box
+            document.getElementById('incident-count').textContent = atrocityData.length;
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94dc2e060748aad4',t:'MTc0OTU5MzIyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

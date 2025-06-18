@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Publications - Atrocity Watch Canada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #121212; color: #f5f5f7; font-family: 'Roboto', sans-serif; }
+        .matrix-font { font-family: 'Orbitron', sans-serif; }
+        textarea { min-height: 60px; }
+    </style>
+</head>
+<body>
+<%- include('../partials/adminHeader', { user: user }) %>
+<div class="container mx-auto px-4 py-8 pt-32">
+  <h2 class="text-2xl font-bold mb-6 matrix-font text-green-400">Manage Publications</h2>
+  <form action="/admin/publications/add" method="POST" class="mb-8 bg-black bg-opacity-80 p-4 rounded-lg border border-green-400/30">
+    <h3 class="font-semibold mb-2 matrix-font text-green-400">Add New Publication</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input name="title" placeholder="Title" required class="p-2 rounded bg-gray-900 border border-green-400/30 text-white" />
+      <input name="journal" placeholder="Journal" class="p-2 rounded bg-gray-900 border border-green-400/30 text-white" />
+      <input name="doi" placeholder="DOI" class="p-2 rounded bg-gray-900 border border-green-400/30 text-white" />
+      <input name="date_published" type="date" class="p-2 rounded bg-gray-900 border border-green-400/30 text-white" />
+      <input name="citations" type="number" placeholder="Citations" class="p-2 rounded bg-gray-900 border border-green-400/30 text-white" />
+      <input name="pdf_link" placeholder="PDF Link" class="p-2 rounded bg-gray-900 border border-green-400/30 text-white" />
+      <input name="keywords" placeholder="Keywords (comma separated)" class="p-2 rounded bg-gray-900 border border-green-400/30 text-white" />
+      <textarea name="abstract" placeholder="Abstract" class="p-2 rounded bg-gray-900 border border-green-400/30 text-white col-span-2"></textarea>
+      <textarea name="authors" placeholder='Authors JSON [{"name":"John Smith","affiliation":"MIT"}]' class="p-2 rounded bg-gray-900 border border-green-400/30 text-white col-span-2"></textarea>
+      <label class="col-span-2"><input type="checkbox" name="published" checked /> Published</label>
+    </div>
+    <button type="submit" class="w-full mt-4 px-4 py-2 rounded matrix-font font-bold bg-green-500 hover:bg-green-600 text-white">Add</button>
+  </form>
+  <h3 class="font-semibold mb-2 matrix-font text-green-400">Edit/Delete Publications</h3>
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-black bg-opacity-80 rounded-lg border border-green-400/30">
+      <thead>
+        <tr>
+          <th class="p-2 matrix-font text-green-400">Title</th>
+          <th class="p-2 matrix-font text-green-400">Journal</th>
+          <th class="p-2 matrix-font text-green-400">Date</th>
+          <th class="p-2 matrix-font text-green-400">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% publications.forEach(function(pub) { %>
+          <tr>
+            <form action="/admin/publications/edit/<%= pub._id %>" method="POST">
+              <td class="p-2"><input name="title" value="<%= pub.title %>" class="p-1 rounded w-full bg-gray-900 border border-green-400/30 text-white" /></td>
+              <td class="p-2"><input name="journal" value="<%= pub.journal %>" class="p-1 rounded w-full bg-gray-900 border border-green-400/30 text-white" /></td>
+              <td class="p-2"><input name="date_published" type="date" value="<%= pub.date_published ? pub.date_published.toISOString().substring(0,10) : '' %>" class="p-1 rounded w-full bg-gray-900 border border-green-400/30 text-white" /></td>
+              <td class="p-2 flex space-x-2">
+                <button type="button" onclick="document.getElementById('edit-<%= pub._id %>').classList.toggle('hidden')" class="px-2 py-1 rounded matrix-font font-bold bg-blue-500 hover:bg-blue-600 text-white">Edit</button>
+                <% if (user && user.username === 'supervisor') { %>
+                <form action="/admin/publications/delete/<%= pub._id %>" method="POST" style="display:inline;">
+                  <button type="submit" class="px-2 py-1 rounded matrix-font font-bold bg-red-500 hover:bg-red-600 text-white" onclick="return confirm('Are you sure? Only SUPERVISOR can delete.')">Delete</button>
+                </form>
+                <% } %>
+              </td>
+              <tr id="edit-<%= pub._id %>" class="hidden">
+                <td colspan="4">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <input name="doi" value="<%= pub.doi %>" class="p-1 rounded bg-gray-900 border border-green-400/30 text-white" placeholder="DOI" />
+                    <input name="citations" value="<%= pub.citations %>" class="p-1 rounded bg-gray-900 border border-green-400/30 text-white" placeholder="Citations" />
+                    <input name="pdf_link" value="<%= pub.pdf_link %>" class="p-1 rounded bg-gray-900 border border-green-400/30 text-white" placeholder="PDF Link" />
+                    <input name="keywords" value="<%= pub.keywords ? pub.keywords.join(', ') : '' %>" class="p-1 rounded bg-gray-900 border border-green-400/30 text-white" placeholder="Keywords" />
+                    <textarea name="abstract" class="p-1 rounded bg-gray-900 border border-green-400/30 text-white col-span-2" placeholder="Abstract"><%- pub.abstract %></textarea>
+                    <textarea name="authors" class="p-1 rounded bg-gray-900 border border-green-400/30 text-white col-span-2" placeholder='Authors JSON'><%= JSON.stringify(pub.authors) %></textarea>
+                    <label class="col-span-2"><input type="checkbox" name="published" <%= pub.published ? 'checked' : '' %> /> Published</label>
+                  </div>
+                  <button type="submit" class="w-full mt-2 px-4 py-1 rounded matrix-font font-bold bg-green-500 hover:bg-green-600 text-white">Save</button>
+                </td>
+              </tr>
+            </form>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../partials/adminFooter') %>
+</body>
+</html>

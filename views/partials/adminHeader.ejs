@@ -1,0 +1,39 @@
+<header class="fixed top-0 left-0 w-full z-50 bg-gray-900 text-white border-b border-green-400/30">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center">
+            <span class="font-bold text-lg">Admin Panel</span>
+        </div>
+        <nav class="relative">
+            <a href="/admin" class="hover:text-green-400 mr-4">Dashboard</a>
+            <% if (typeof user !== 'undefined' && user) { %>
+                <div class="inline-block relative group">
+                    <button class="hover:text-green-400 font-bold" id="adminUserBtn"><%= user.username %> ▼</button>
+                    <div class="absolute right-0 mt-2 w-48 bg-gray-800 border border-green-400/30 rounded shadow-lg hidden group-hover:block z-50" id="adminDropdown">
+                        <a href="/admin/security" class="block px-4 py-2 hover:bg-gray-700">Security Settings</a>
+                        <a href="/admin/logout" class="block px-4 py-2 hover:bg-gray-700">Logout</a>
+                    </div>
+                </div>
+                <script>
+                  // Optional: click toggling for mobile
+                  document.addEventListener('DOMContentLoaded', function() {
+                    const btn = document.getElementById('adminUserBtn');
+                    const dropdown = document.getElementById('adminDropdown');
+                    if(btn && dropdown) {
+                      btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        dropdown.classList.toggle('hidden');
+                      });
+                      document.addEventListener('click', function(e) {
+                        if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+                          dropdown.classList.add('hidden');
+                        }
+                      });
+                    }
+                  });
+                </script>
+            <% } else { %>
+                <a href="/admin/login" class="hover:text-green-400">Login</a>
+            <% } %>
+        </nav>
+    </div>
+</header>

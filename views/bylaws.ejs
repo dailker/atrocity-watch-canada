@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>By-Laws - Atrocity Watch Canada</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body { background: #121212; color: #f5f5f7; font-family: 'Roboto', sans-serif; }
+        .matrix-font { font-family: 'Orbitron', sans-serif; }
+        .bylaw-section {
+            background: #181818;
+            border-radius: 1rem;
+            border: 1px solid #00ff9d;
+            box-shadow: 0 8px 32px rgba(0,255,157,0.08);
+            padding: 2rem 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.7s;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+        .bylaw-details {
+            display: none;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .search-bar {
+            background: #232323;
+            border: 1px solid #00ff9d;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            font-size: 1.1rem;
+            color: #f5f5f7;
+            width: 100%;
+            margin-bottom: 2rem;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .search-bar:focus {
+            border-color: #00ff9d;
+            box-shadow: 0 0 0 2px #00ff9d44;
+        }
+        .highlight {
+            background: #00ff9d44;
+            color: #00ff9d;
+            border-radius: 0.3em;
+            padding: 0 0.2em;
+            transition: background 0.3s;
+        }
+        .next-btn {
+            @apply px-6 py-2 rounded matrix-font font-bold;
+            background: #00ff9d;
+            color: #181818;
+            border: none;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 8px #00ff9d22;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .next-btn:hover {
+            background: #00e68a;
+            color: #121212;
+            transform: translateY(-2px) scale(1.04);
+        }
+        .fade-in {
+            animation: fadeInUp 0.7s;
+        }
+        .bylaw-details {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(.4,2,.6,1), opacity 0.3s;
+            font-size: 1.05rem;
+            color: #baffd9;
+            margin-top: 0.5rem;
+            padding-left: 0.5rem;
+        }
+        .bylaw-section.expanded .bylaw-details {
+            max-height: 300px;
+            opacity: 1;
+            animation: glitchZoom 0.4s cubic-bezier(.4,2,.6,1);
+        }
+        @keyframes glitchZoom {
+            0% {
+                transform: scale(0.95) skewX(-2deg);
+                filter: blur(2px) brightness(1.2);
+                opacity: 0.2;
+            }
+            60% {
+                transform: scale(1.04) skewX(2deg);
+                filter: blur(0.5px) brightness(1.1);
+                opacity: 1;
+            }
+            80% {
+                transform: scale(0.98) skewX(-1deg);
+                filter: blur(0.2px) brightness(1.05);
+            }
+            100% {
+                transform: scale(1) skewX(0deg);
+                filter: none;
+                opacity: 1;
+            }
+        }
+        .bylaw-section .text-green-400 {
+            cursor: pointer;
+            transition: text-shadow 0.2s;
+        }
+        .bylaw-section .text-green-400:hover {
+            text-shadow: 0 0 8px #00ff9d, 0 0 2px #fff;
+        }
+        /* Book popup modal */
+        .bylaw-modal-bg {
+            background: rgba(0,0,0,0.85);
+            position: fixed;
+            z-index: 10000;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s;
+        }
+        .bylaw-modal-bg.hidden {
+            display: none;
+        }
+        .bylaw-modal-content {
+            background: #181818;
+            border-radius: 1rem;
+            border: 2px solid #00ff9d;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+            width: 90vw;
+            max-width: 700px;
+            min-height: 320px;
+            max-height: 90vh;
+            padding: 2.5rem 2rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: bookOpen 0.7s cubic-bezier(.4,2,.6,1);
+            overflow: hidden;
+        }
+        .bylaw-modal-content .close-modal-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #ff3b30;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 2;
+        }
+        /* Book open animation with page flip effect */
+        @keyframes bookOpen {
+            0% {
+                transform: scale(0.92) rotateY(40deg) skewY(-2deg);
+                filter: blur(2px) brightness(1.2);
+                opacity: 0.2;
+                box-shadow: 0 0 0 0 #00ff9d;
+            }
+            60% {
+                transform: scale(1.04) rotateY(-10deg) skewY(2deg);
+                filter: blur(0.5px) brightness(1.1);
+                opacity: 1;
+                box-shadow: 0 10px 40px #00ff9d44;
+            }
+            80% {
+                transform: scale(0.98) rotateY(3deg) skewY(-1deg);
+                filter: blur(0.2px) brightness(1.05);
+            }
+            100% {
+                transform: scale(1) rotateY(0deg) skewY(0deg);
+                filter: none;
+                opacity: 1;
+                box-shadow: 0 10px 40px #00ff9d44;
+            }
+        }
+        .bylaw-modal-content .bylaw-modal-title {
+            font-size: 2rem;
+            font-family: 'Orbitron', sans-serif;
+            color: #00ff9d;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .bylaw-modal-content .bylaw-modal-main {
+            font-size: 1.15rem;
+            color: #f5f5f7;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .bylaw-modal-content .bylaw-modal-details {
+            font-size: 1.08rem;
+            color: #baffd9;
+            background: #232323;
+            border-radius: 0.5rem;
+            padding: 1.2rem 1rem;
+            box-shadow: 0 2px 12px #00ff9d22;
+            margin: 0 auto;
+            max-width: 90%;
+            min-height: 80px;
+            animation: bookPage 0.7s cubic-bezier(.4,2,.6,1);
+        }
+        @keyframes bookPage {
+            0% {
+                transform: scaleX(0.7) rotateY(60deg);
+                opacity: 0.2;
+                filter: blur(2px);
+            }
+            60% {
+                transform: scaleX(1.08) rotateY(-10deg);
+                opacity: 1;
+                filter: blur(0.5px);
+            }
+            100% {
+                transform: scaleX(1) rotateY(0deg);
+                opacity: 1;
+                filter: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <div class="container mx-auto px-4 pt-32 pb-16">
+        <h1 class="text-4xl md:text-5xl font-bold matrix-font text-center text-green-400 mb-8">By-Laws</h1>
+        <div class="max-w-2xl mx-auto">
+            <input type="text" id="bylawSearch" class="search-bar matrix-font" placeholder="Search by-law articles..." autocomplete="off" />
+        </div>
+        <div id="bylawContent" class="max-w-2xl mx-auto">
+            <!-- By-law sections will be injected here -->
+        </div>
+        <!-- Book Modal Popup -->
+        <div id="bylawModal" class="bylaw-modal-bg hidden">
+            <div class="bylaw-modal-content">
+                <button class="close-modal-btn" id="closeBylawModal" aria-label="Close">&times;</button>
+                <div class="bylaw-modal-title" id="bylawModalTitle"></div>
+                <div class="bylaw-modal-main" id="bylawModalMain"></div>
+                <div class="bylaw-modal-details" id="bylawModalDetails"></div>
+            </div>
+        </div>
+        <div class="flex justify-end max-w-2xl mx-auto">
+            <button id="nextPageBtn" class="next-btn matrix-font">Next Page &rarr;</button>
+        </div>
+    </div>
+    <%- include('partials/footer') %>
+    <script>
+        // Sample by-law data (simulate pagination)
+        const bylaws = [
+            [
+                { title: "Article 1: Name", text: "The name of the organization shall be Atrocity Watch Canada." },
+                { title: "Article 2: Purpose", text: "The purpose of the organization is to monitor, document, and prevent atrocities and human rights violations." },
+                { title: "Article 3: Membership", text: "Membership is open to all individuals who support the mission and values of the organization." }
+            ],
+            [
+                { title: "Article 4: Board of Directors", text: "The Board of Directors shall consist of at least three members elected by the membership." },
+                { title: "Article 5: Meetings", text: "The organization shall hold an annual general meeting and regular board meetings." },
+                { title: "Article 6: Amendments", text: "These by-laws may be amended by a two-thirds vote of the membership at any general meeting." }
+            ]
+        ];
+        let currentPage = 0;
+
+        // Add details for each bylaw article (supporting sub and sub-sub texts)
+        const bylawDetails = {
+            "Article 1: Name": [
+                "Atrocity Watch Canada is a non-profit, non-partisan organization registered in Canada, dedicated to the prevention of atrocities and the protection of human rights."
+            ],
+            "Article 2: Purpose": [
+                "Our objectives include:",
+                [
+                    "(a) Monitoring and reporting on potential and ongoing atrocities.",
+                    "(b) Providing resources and education to the public.",
+                    "(c) Advocating for policy changes and accountability.",
+                    [
+                        "i. Policy recommendations are evidence-based.",
+                        "ii. Advocacy is non-partisan and transparent."
+                    ]
+                ]
+            ],
+            "Article 3: Membership": [
+                "Members are expected to uphold the values of the organization.",
+                [
+                    "Membership may be revoked by the Board for conduct detrimental to the mission.",
+                    [
+                        "i. The member will be notified in writing.",
+                        "ii. The member has the right to appeal."
+                    ]
+                ]
+            ],
+            "Article 4: Board of Directors": [
+                "Directors serve two-year terms and are responsible for governance, strategic direction, and oversight of operations.",
+                [
+                    "The Board shall:",
+                    [
+                        "i. Meet at least quarterly.",
+                        "ii. Maintain records of all meetings."
+                    ]
+                ]
+            ],
+            "Article 5: Meetings": [
+                "Notice of meetings must be given at least 14 days in advance.",
+                [
+                    "Quorum is a majority of the Board.",
+                    [
+                        "i. If quorum is not met, the meeting is adjourned.",
+                        "ii. Special meetings may be called by the Chair."
+                    ]
+                ],
+                "Minutes are recorded and made available to members."
+            ],
+            "Article 6: Amendments": [
+                "Proposed amendments must be submitted in writing at least 30 days before a general meeting.",
+                [
+                    "All members are notified and may participate in the vote.",
+                    [
+                        "i. Amendments require a two-thirds majority.",
+                        "ii. Approved amendments take effect immediately."
+                    ]
+                ]
+            ]
+        };
+
+        function highlightText(text, query) {
+            if (!query) return text;
+            const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            return text.replace(new RegExp(safeQuery, 'gi'), match => `<span class="highlight">${match}</span>`);
+        }
+
+        // Recursively render details with indentation for sub and sub-sub texts
+        function renderDetail(detail, query = "", level = 0) {
+            if (typeof detail === "string") {
+                return `<div style="margin-left:${level * 1.5}em">${highlightText(detail, query)}</div>`;
+            }
+            if (Array.isArray(detail)) {
+                return detail.map(d => renderDetail(d, query, level + 1)).join('');
+            }
+            return '';
+        }
+
+        // Helper: check if any keyword is in title/text/details
+        function sectionMatches(section, details, query) {
+            if (!query) return false;
+            const q = query.toLowerCase();
+            if (section.title.toLowerCase().includes(q) || section.text.toLowerCase().includes(q)) return true;
+            // Recursively check details
+            function checkDetail(detail) {
+                if (typeof detail === "string") return detail.toLowerCase().includes(q);
+                if (Array.isArray(detail)) return detail.some(checkDetail);
+                return false;
+            }
+            return checkDetail(details);
+        }
+
+        // Helper: flatten all bylaw sections across all pages for search
+        function getAllSections() {
+            let arr = [];
+            bylaws.forEach(page => arr = arr.concat(page));
+            return arr;
+        }
+
+        function getAllDetails() {
+            // Returns details in the same order as getAllSections
+            let arr = [];
+            bylaws.forEach(page => {
+                page.forEach(section => {
+                    arr.push(bylawDetails[section.title] || "");
+                });
+            });
+            return arr;
+        }
+
+        function renderBylaws(page, query = "") {
+            const container = document.getElementById('bylawContent');
+            container.innerHTML = "";
+
+            let sectionsToRender, detailsToRender;
+
+            if (query) {
+                // Show all matching sections from all pages
+                const allSections = getAllSections();
+                const allDetails = getAllDetails();
+                sectionsToRender = [];
+                detailsToRender = [];
+                for (let i = 0; i < allSections.length; i++) {
+                    if (sectionMatches(allSections[i], allDetails[i], query)) {
+                        sectionsToRender.push(allSections[i]);
+                        detailsToRender.push(allDetails[i]);
+                    }
+                }
+            } else {
+                // Show current page
+                sectionsToRender = bylaws[page];
+                detailsToRender = sectionsToRender.map(s => bylawDetails[s.title] || "");
+            }
+
+            sectionsToRender.forEach((section, idx) => {
+                const details = detailsToRender[idx];
+                const highlightBox = sectionMatches(section, details, query) ? "ring-4 ring-green-400/60" : "";
+                const div = document.createElement('div');
+                div.className = `bylaw-section fade-in ${highlightBox}`;
+                div.innerHTML = `
+                    <h2 class="text-2xl font-bold matrix-font text-green-400 mb-2">${highlightText(section.title, query)}</h2>
+                    <p class="text-lg">${highlightText(section.text, query)}</p>
+                    <div class="bylaw-details">${renderDetail(details, query)}</div>
+                `;
+                container.appendChild(div);
+            });
+
+            // Add expand/collapse logic for each section (open as book modal)
+            Array.from(container.querySelectorAll('.bylaw-section')).forEach(sectionDiv => {
+                const titleEl = sectionDiv.querySelector('.text-green-400');
+                titleEl.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openBylawModal(
+                        titleEl.textContent,
+                        sectionDiv.querySelector('p').textContent,
+                        sectionDiv.querySelector('.bylaw-details').innerHTML
+                    );
+                });
+            });
+        }
+
+        // Book modal logic
+        const bylawModal = document.getElementById('bylawModal');
+        const bylawModalTitle = document.getElementById('bylawModalTitle');
+        const bylawModalMain = document.getElementById('bylawModalMain');
+        const bylawModalDetails = document.getElementById('bylawModalDetails');
+        function openBylawModal(title, main, details) {
+            bylawModalTitle.textContent = title;
+            bylawModalMain.textContent = main;
+            bylawModalDetails.innerHTML = details;
+            bylawModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeBylawModal() {
+            bylawModal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('closeBylawModal').onclick = closeBylawModal;
+        bylawModal.addEventListener('click', function(e) {
+            if (e.target === bylawModal) closeBylawModal();
+        });
+
+        document.getElementById('bylawSearch').addEventListener('input', function() {
+            renderBylaws(currentPage, this.value.trim());
+        });
+
+        document.getElementById('nextPageBtn').addEventListener('click', function() {
+            currentPage = (currentPage + 1) % bylaws.length;
+            const searchVal = document.getElementById('bylawSearch').value.trim();
+            renderBylaws(currentPage, searchVal);
+        });
+
+        // Initial render
+        renderBylaws(currentPage);
+
+        // Smooth scroll to top on page change
+        document.getElementById('nextPageBtn').addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

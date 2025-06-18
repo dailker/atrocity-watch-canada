@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get Involved - Atrocity Watch Canada</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { background: #121212; color: #f5f5f7; font-family: 'Roboto', sans-serif; }
+        .matrix-font { font-family: 'Orbitron', sans-serif; }
+        .modal-bg {
+            background: rgba(0,0,0,0.85);
+            position: fixed;
+            z-index: 10000;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s;
+        }
+        .modal-content {
+            background: #181818;
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+            border: 1px solid #00ff9d;
+            width: 70vh;
+            height: 80vh;
+            max-width: none;
+            max-height: none;
+            padding: 2.5vh 2vh;
+            position: relative;
+            animation: fadeInUp 0.4s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(4vh);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .fade-slide {
+            transition: opacity 0.3s, max-height 0.3s, margin 0.3s;
+            overflow: hidden;
+            opacity: 1;
+            max-height: 50vh;
+            margin-bottom: 1vh;
+        }
+        .fade-slide.hide {
+            opacity: 0;
+            max-height: 0;
+            margin-bottom: 0;
+        }
+        .step-btn {
+            @apply px-4 py-2 rounded matrix-font font-bold;
+            background: #222;
+            color: #00ff9d;
+            border: 1px solid #00ff9d;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: background 0.2s, color 0.2s;
+        }
+        .step-btn.active, .step-btn:hover {
+            background: #00ff9d;
+            color: #181818;
+        }
+        .close-modal-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #ff3b30;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <div class="container mx-auto px-4 pt-32 pb-16">
+        <h1 class="text-4xl md:text-5xl font-bold matrix-font text-center text-green-400 mb-8">Get Involved</h1>
+        <p class="text-xl text-center mb-12 max-w-2xl mx-auto">Join our efforts to prevent atrocities and protect human rights worldwide. There are many ways you can contribute to making a difference.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="action-card rounded-lg p-8 flex flex-col items-center">
+                <div class="text-red-500 text-5xl mb-4"><i class="fas fa-bullhorn"></i></div>
+                <h2 class="text-2xl font-bold matrix-font mb-3 text-green-400">Spread Awareness</h2>
+                <p class="mb-6 text-center">Share our reports and findings on social media to raise awareness about ongoing atrocities and human rights violations.</p>
+                <a href="https://twitter.com/intent/tweet?text=Check%20out%20Atrocity%20Watch%20Canada!%20https://atrocitywatchcanada.org" target="_blank" class="btn-primary inline-block px-6 py-2 rounded-md matrix-font font-bold mb-2">Share on Twitter</a>
+                <a href="mailto:?subject=Atrocity%20Watch%20Canada&body=Check%20out%20Atrocity%20Watch%20Canada!%20https://atrocitywatchcanada.org" class="btn-secondary inline-block px-6 py-2 rounded-md matrix-font font-bold">Share via Email</a>
+            </div>
+            <div class="action-card rounded-lg p-8 flex flex-col items-center">
+                <div class="text-red-500 text-5xl mb-4"><i class="fas fa-hand-holding-heart"></i></div>
+                <h2 class="text-2xl font-bold matrix-font mb-3 text-green-400">Donate</h2>
+                <p class="mb-6 text-center">Support our monitoring and documentation efforts with a one-time or recurring donation to fund our operations.</p>
+                <button class="btn-primary inline-block px-6 py-2 rounded-md matrix-font font-bold get-involved-btn" data-step="donate">Donate Now</button>
+            </div>
+            <div class="action-card rounded-lg p-8 flex flex-col items-center">
+                <div class="text-red-500 text-5xl mb-4"><i class="fas fa-users"></i></div>
+                <h2 class="text-2xl font-bold matrix-font mb-3 text-green-400">Volunteer</h2>
+                <p class="mb-6 text-center">Join our team of volunteers to help with research, translation, outreach, and other critical tasks.</p>
+                <a href="mailto:info@atrocitywatchcanada.org?subject=Volunteering%20with%20Atrocity%20Watch%20Canada" class="btn-primary inline-block px-6 py-2 rounded-md matrix-font font-bold">Contact Us</a>
+            </div>
+        </div>
+    </div>
+    <div id="getInvolvedModal" class="modal-bg hidden">
+        <div class="modal-content">
+            <button class="close-modal-btn" id="closeGetInvolvedModal" aria-label="Close">&times;</button>
+            <h2 class="text-2xl font-bold matrix-font text-green-400 mb-4 text-center">Donate</h2>
+            <!-- Only Donate Step -->
+            <form id="donateStep" autocomplete="off">
+                <div class="mb-4">
+                    <label class="block matrix-font mb-1">Donation Amount</label>
+                    <div class="flex gap-2 mb-2">
+                        <button type="button" class="btn-secondary px-4 py-2 rounded amount-btn" data-amount="10">$10</button>
+                        <button type="button" class="btn-secondary px-4 py-2 rounded amount-btn" data-amount="25">$25</button>
+                        <button type="button" class="btn-secondary px-4 py-2 rounded amount-btn" data-amount="50">$50</button>
+                        <button type="button" class="btn-secondary px-4 py-2 rounded amount-btn" data-amount="100">$100</button>
+                        <input type="number" min="1" step="any" placeholder="Custom" class="w-24 px-2 py-2 rounded bg-gray-900 border border-green-400/30 text-white amount-custom" />
+                    </div>
+                </div>
+                <div class="mb-4 flex items-center">
+                    <input type="checkbox" id="anonymousDonation" class="mr-2" />
+                    <label for="anonymousDonation" class="matrix-font">Donate Anonymously</label>
+                </div>
+                <div id="donorFields" class="fade-slide">
+                    <div class="mb-3">
+                        <label class="block matrix-font mb-1" for="firstName">First Name</label>
+                        <input type="text" id="firstName" class="w-full px-3 py-2 rounded bg-gray-900 border border-green-400/30 text-white" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block matrix-font mb-1" for="lastName">Last Name</label>
+                        <input type="text" id="lastName" class="w-full px-3 py-2 rounded bg-gray-900 border border-green-400/30 text-white" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block matrix-font mb-1" for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="w-full px-3 py-2 rounded bg-gray-900 border border-green-400/30 text-white" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block matrix-font mb-1" for="email">Email Address</label>
+                        <input type="email" id="email" class="w-full px-3 py-2 rounded bg-gray-900 border border-green-400/30 text-white" />
+                    </div>
+                </div>
+                <button type="submit" class="w-full btn-primary px-4 py-2 rounded matrix-font font-bold mt-2">Donate</button>
+            </form>
+        </div>
+    </div>
+    <%- include('partials/footer') %>
+    <script>
+        // Modal logic (only for Donate)
+        function openGetInvolvedModal() {
+            document.getElementById('getInvolvedModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeGetInvolvedModal() {
+            document.getElementById('getInvolvedModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+        document.querySelector('.get-involved-btn').addEventListener('click', function() {
+            openGetInvolvedModal();
+        });
+        document.getElementById('closeGetInvolvedModal').onclick = closeGetInvolvedModal;
+
+        // Donation amount selection
+        document.querySelectorAll('.amount-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('bg-green-500', 'text-white'));
+                this.classList.add('bg-green-500', 'text-white');
+                document.querySelector('.amount-custom').value = '';
+            });
+        });
+        document.querySelector('.amount-custom').addEventListener('input', function() {
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('bg-green-500', 'text-white'));
+        });
+
+        // Anonymous donation toggle
+        const anonCheckbox = document.getElementById('anonymousDonation');
+        const donorFields = document.getElementById('donorFields');
+        anonCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                donorFields.classList.add('hide');
+            } else {
+                donorFields.classList.remove('hide');
+            }
+        });
+
+        // Prevent form submission (demo only)
+        document.getElementById('donateStep').onsubmit = e => { e.preventDefault(); alert('Thank you for your donation!'); closeGetInvolvedModal(); };
+    </script>
+</body>
+</html>

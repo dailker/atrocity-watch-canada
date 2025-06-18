@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atrocity Watch Canada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary: #ff3b30;
+            --secondary: #00ff9d;
+            --dark: #121212;
+            --light: #f5f5f7;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .matrix-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .hero-section {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            object-fit: cover;
+            transition: opacity 0.5s ease-in-out;
+            z-index: -1;
+        }
+        
+        .hero-image.active {
+            opacity: 0.5;
+        }
+        
+        .glitch {
+            position: relative;
+            color: var(--light);
+            font-size: 4rem;
+            letter-spacing: 0.5rem;
+            animation: glitch-skew 1s infinite linear alternate-reverse;
+            transform-origin: center;
+        }
+        
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--secondary);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 var(--primary);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-anim {
+            0% {
+                clip: rect(31px, 9999px, 94px, 0);
+                transform: skew(0.65deg);
+            }
+            5% {
+                clip: rect(70px, 9999px, 71px, 0);
+                transform: skew(0.38deg);
+            }
+            10% {
+                clip: rect(33px, 9999px, 7px, 0);
+                transform: skew(0.96deg);
+            }
+            15% {
+                clip: rect(76px, 9999px, 94px, 0);
+                transform: skew(0.36deg);
+            }
+            20% {
+                clip: rect(42px, 9999px, 10px, 0);
+                transform: skew(0.56deg);
+            }
+            25% {
+                clip: rect(92px, 9999px, 61px, 0);
+                transform: skew(0.76deg);
+            }
+            30% {
+                clip: rect(5px, 9999px, 52px, 0);
+                transform: skew(0.69deg);
+            }
+            35% {
+                clip: rect(8px, 9999px, 81px, 0);
+                transform: skew(0.65deg);
+            }
+            40% {
+                clip: rect(51px, 9999px, 37px, 0);
+                transform: skew(0.2deg);
+            }
+            45% {
+                clip: rect(59px, 9999px, 2px, 0);
+                transform: skew(0.58deg);
+            }
+            50% {
+                clip: rect(31px, 9999px, 46px, 0);
+                transform: skew(0.24deg);
+            }
+            55% {
+                clip: rect(13px, 9999px, 76px, 0);
+                transform: skew(0.67deg);
+            }
+            60% {
+                clip: rect(62px, 9999px, 11px, 0);
+                transform: skew(0.03deg);
+            }
+            65% {
+                clip: rect(60px, 9999px, 76px, 0);
+                transform: skew(0.59deg);
+            }
+            70% {
+                clip: rect(24px, 9999px, 13px, 0);
+                transform: skew(0.32deg);
+            }
+            75% {
+                clip: rect(47px, 9999px, 7px, 0);
+                transform: skew(0.42deg);
+            }
+            80% {
+                clip: rect(41px, 9999px, 89px, 0);
+                transform: skew(0.53deg);
+            }
+            85% {
+                clip: rect(9px, 9999px, 38px, 0);
+                transform: skew(0.96deg);
+            }
+            90% {
+                clip: rect(23px, 9999px, 75px, 0);
+                transform: skew(0.07deg);
+            }
+            95% {
+                clip: rect(69px, 9999px, 23px, 0);
+                transform: skew(0.05deg);
+            }
+            100% {
+                clip: rect(8px, 9999px, 32px, 0);
+                transform: skew(0.58deg);
+            }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% {
+                clip: rect(65px, 9999px, 119px, 0);
+                transform: skew(0.02deg);
+            }
+            5% {
+                clip: rect(93px, 9999px, 53px, 0);
+                transform: skew(0.05deg);
+            }
+            10% {
+                clip: rect(137px, 9999px, 147px, 0);
+                transform: skew(0.95deg);
+            }
+            15% {
+                clip: rect(40px, 9999px, 137px, 0);
+                transform: skew(0.08deg);
+            }
+            20% {
+                clip: rect(143px, 9999px, 68px, 0);
+                transform: skew(0.03deg);
+            }
+            25% {
+                clip: rect(71px, 9999px, 46px, 0);
+                transform: skew(0.01deg);
+            }
+            30% {
+                clip: rect(2px, 9999px, 106px, 0);
+                transform: skew(0.3deg);
+            }
+            35% {
+                clip: rect(116px, 9999px, 138px, 0);
+                transform: skew(0.94deg);
+            }
+            40% {
+                clip: rect(115px, 9999px, 59px, 0);
+                transform: skew(0.29deg);
+            }
+            45% {
+                clip: rect(134px, 9999px, 117px, 0);
+                transform: skew(0.67deg);
+            }
+            50% {
+                clip: rect(53px, 9999px, 87px, 0);
+                transform: skew(0.5deg);
+            }
+            55% {
+                clip: rect(81px, 9999px, 82px, 0);
+                transform: skew(0.95deg);
+            }
+            60% {
+                clip: rect(139px, 9999px, 125px, 0);
+                transform: skew(0.9deg);
+            }
+            65% {
+                clip: rect(108px, 9999px, 97px, 0);
+                transform: skew(0.32deg);
+            }
+            70% {
+                clip: rect(19px, 9999px, 123px, 0);
+                transform: skew(0.55deg);
+            }
+            75% {
+                clip: rect(110px, 9999px, 131px, 0);
+                transform: skew(0.29deg);
+            }
+            80% {
+                clip: rect(55px, 9999px, 93px, 0);
+                transform: skew(0.73deg);
+            }
+            85% {
+                clip: rect(18px, 9999px, 148px, 0);
+                transform: skew(0.65deg);
+            }
+            90% {
+                clip: rect(142px, 9999px, 33px, 0);
+                transform: skew(0.5deg);
+            }
+            95% {
+                clip: rect(61px, 9999px, 113px, 0);
+                transform: skew(0.45deg);
+            }
+            100% {
+                clip: rect(138px, 9999px, 147px, 0);
+                transform: skew(0.02deg);
+            }
+        }
+        
+        @keyframes glitch-skew {
+            0% {
+                transform: skew(-0.5deg);
+            }
+            10% {
+                transform: skew(0.5deg);
+            }
+            20% {
+                transform: skew(0.8deg);
+            }
+            30% {
+                transform: skew(0.2deg);
+            }
+            40% {
+                transform: skew(-0.2deg);
+            }
+            50% {
+                transform: skew(-0.5deg);
+            }
+            60% {
+                transform: skew(0.3deg);
+            }
+            70% {
+                transform: skew(0.5deg);
+            }
+            80% {
+                transform: skew(-0.1deg);
+            }
+            90% {
+                transform: skew(-0.5deg);
+            }
+            100% {
+                transform: skew(0.2deg);
+            }
+        }
+        
+        .radar-section {
+            min-height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            position: relative;
+        }
+        
+        #map {
+            height: 70vh;
+            width: 100%;
+            background-color: #0a0a0a;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+            position: relative;
+        }
+        
+        .leaflet-container {
+            background: #000 !important;
+        }
+        
+        .stats-item {
+            border: 1px solid var(--secondary);
+            background-color: rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
+        }
+        
+        .stats-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 157, 0.3);
+        }
+        
+        .action-card {
+            border: 1px solid var(--primary);
+            background-color: rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 59, 48, 0.3);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff1a0e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 59, 48, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: black;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #00e68a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 157, 0.4);
+        }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            transition: right 0.3s ease-in-out;
+            border-left: 2px solid var(--secondary);
+            box-shadow: -5px 0 15px rgba(0, 255, 157, 0.3);
+        }
+        
+        .mobile-menu.open {
+            right: 0;
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+        
+        .menu-overlay.open {
+            display: block;
+        }
+        
+        /* Custom marker and heatmap styles */
+        .custom-marker {
+            background: transparent;
+            border: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .marker-pulse {
+            fill: none;
+            stroke-width: 2;
+            stroke-dasharray: 2 2;
+        }
+        
+        .heatmap-layer {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .heatmap-visible {
+            opacity: 1;
+        }
+        
+        /* Scroll animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00cc7d;
+        }
+        
+        /* Map info box */
+        .map-info-box {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--secondary);
+            padding: 10px 15px;
+            border-radius: 4px;
+            z-index: 500;
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+            text-align: center;
+            width: 300px;
+            margin-top: -1px; /* Align with top border */
+        }
+        
+        /* Incident detail modal */
+        .incident-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow-y: auto;
+        }
+        
+        .incident-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--primary);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            transform: scale(1.1);
+        }
+        
+        .typewriter-container {
+            min-height: 200px;
+            border: 1px solid var(--secondary);
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        .typewriter-text {
+            font-family: 'Courier New', monospace;
+            color: var(--secondary);
+            overflow: hidden;
+            position: relative;
+            white-space: pre-wrap;
+            margin: 0;
+            letter-spacing: 0.05em;
+            line-height: 1.5;
+        }
+        
+        .typewriter-text::after {
+            content: '|';
+            position: absolute;
+            display: inline-block;
+            color: var(--secondary);
+            opacity: 1;
+            animation: blink 0.7s infinite;
+            font-weight: normal;
+            height: 1em;
+            width: 0.5em;
+            margin-left: 1px;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .incident-details {
+            margin-top: 30px;
+        }
+        
+        .detail-item {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+        
+        .detail-label {
+            width: 150px;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        .detail-value {
+            flex: 1;
+        }
+        
+        .severity-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .severity-critical {
+            background-color: #ff0000;
+        }
+        
+        .severity-high {
+            background-color: #ff3b30;
+        }
+        
+        .severity-medium {
+            background-color: #ff9500;
+        }
+        
+        .severity-low {
+            background-color: #ffcc00;
+        }
+        
+        /* Map container wrapper for positioning */
+        .map-container {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <!-- Hero Section with Image Slider -->
+    <section class="hero-section flex items-center justify-center">
+        <div class="hero-image active" style="background: url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;"></div>
+        <div class="hero-image" style="background: url('https://images.unsplash.com/photo-1603738276321-efe7a8ee2e9c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;"></div>
+        <div class="hero-image" style="background: url('https://images.unsplash.com/photo-1607923432780-7a9c30adcb5b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;"></div>
+        
+        <div class="container mx-auto px-4 text-center z-10">
+            <h1 class="glitch matrix-font mb-6" data-text="ATROCITY WATCH">ATROCITY WATCH</h1>
+            <div id="slogan-container" class="mb-12">
+                <p class="text-2xl md:text-3xl font-light mb-8 slogan active">Monitoring Human Rights Violations Worldwide</p>
+                <p class="text-2xl md:text-3xl font-light mb-8 slogan hidden">Bearing Witness When The World Looks Away</p>
+                <p class="text-2xl md:text-3xl font-light mb-8 slogan hidden">Documenting Injustice To Prevent Future Atrocities</p>
+            </div>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <a href="#radar" class="btn-primary px-8 py-3 rounded-md text-lg font-semibold matrix-font">VIEW RADAR</a>
+                <a href="/get-involved" class="btn-secondary px-8 py-3 rounded-md text-lg font-semibold matrix-font">TAKE ACTION</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Radar Section -->
+    <section id="radar" class="radar-section py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold matrix-font text-center mb-12 fade-in">ATROCITY <span class="text-red-500">RADAR</span></h2>
+            <p class="text-xl text-center mb-12 max-w-3xl mx-auto fade-in">Real-time monitoring of human rights violations and atrocities occurring worldwide. Our radar identifies and tracks incidents to raise awareness and prompt action.</p>
+            
+            <div class="fade-in relative map-container">
+                <div class="map-info-box">
+                    <h3 class="matrix-font text-red-500 text-lg font-bold">REALTIME</h3>
+                    <p class="text-sm text-gray-300">MONITORING ACTIVE INCIDENTS: <span id="incident-count" class="text-red-500 font-bold"><%= atrocities.length %></span></p>
+                </div>
+                <div id="map" class="rounded-lg overflow-hidden mt-8"></div>
+            </div>
+            
+            <div class="mt-8 text-sm text-gray-400 text-center fade-in">
+                <p>Click on markers to view detailed information. Zoom in to see heat maps of affected areas.</p>
+                <p class="mt-2"><span class="text-red-500">Red</span> indicates active situations. <span class="text-yellow-500">Yellow</span> indicates monitoring. <span class="text-green-500">Green</span> indicates improving conditions.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Incident Detail Modal -->
+    <div id="incident-modal" class="incident-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="incident-title" class="text-3xl font-bold matrix-font text-red-500"></h2>
+                <button class="close-modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18" stroke="#ff3b30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M6 6L18 18" stroke="#ff3b30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="typewriter-container">
+                <p id="typewriter-text" class="typewriter-text"></p>
+            </div>
+            
+            <div class="incident-details">
+                <div class="detail-item">
+                    <div class="detail-label">Location:</div>
+                    <div id="incident-location" class="detail-value"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Severity:</div>
+                    <div id="incident-severity" class="detail-value"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Type:</div>
+                    <div id="incident-type" class="detail-value"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Affected Population:</div>
+                    <div id="incident-affected" class="detail-value"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Status:</div>
+                    <div id="incident-status" class="detail-value"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Last Updated:</div>
+                    <div id="incident-updated" class="detail-value"></div>
+                </div>
+            </div>
+            
+            <div class="mt-8 flex justify-center">
+                <button id="view-report-btn" class="btn-primary px-8 py-3 rounded-md text-lg font-semibold matrix-font mr-4">VIEW FULL REPORT</button>
+                <button id="take-action-btn" class="btn-secondary px-8 py-3 rounded-md text-lg font-semibold matrix-font">TAKE ACTION</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics Section -->
+    <section id="statistics" class="py-20 bg-gradient-to-b from-black to-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold matrix-font text-center mb-12 fade-in">IMPACT <span class="text-green-400">STATISTICS</span></h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="stats-item rounded-lg p-6 text-center fade-in">
+                    <div class="text-5xl font-bold text-green-400 mb-2 counter" data-target="87">0</div>
+                    <div class="text-xl matrix-font">Countries Monitored</div>
+                </div>
+                
+                <div class="stats-item rounded-lg p-6 text-center fade-in">
+                    <div class="text-5xl font-bold text-green-400 mb-2 counter" data-target="342">0</div>
+                    <div class="text-xl matrix-font">Reports Published</div>
+                </div>
+                
+                <div class="stats-item rounded-lg p-6 text-center fade-in">
+                    <div class="text-5xl font-bold text-green-400 mb-2 counter" data-target="1893">0</div>
+                    <div class="text-xl matrix-font">Incidents Documented</div>
+                </div>
+                
+                <div class="stats-item rounded-lg p-6 text-center fade-in">
+                    <div class="text-5xl font-bold text-green-400 mb-2 counter" data-target="53">0</div>
+                    <div class="text-xl matrix-font">Policy Changes Influenced</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Take Action Section -->
+    <section id="action" class="py-20 bg-gradient-to-b from-gray-900 to-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold matrix-font text-center mb-12 fade-in">TAKE <span class="text-red-500">ACTION</span></h2>
+            <p class="text-xl text-center mb-12 max-w-3xl mx-auto fade-in">Join our efforts to prevent atrocities and protect human rights worldwide. There are many ways you can contribute to making a difference.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="action-card rounded-lg p-6 fade-in">
+                    <div class="text-red-500 text-4xl mb-4">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold matrix-font mb-3">Spread Awareness</h3>
+                    <p class="mb-6">Share our reports and findings on social media to raise awareness about ongoing atrocities and human rights violations.</p>
+                    <a href="/get-involved" class="btn-primary inline-block px-6 py-2 rounded-md">Learn More</a>
+                </div>
+                
+                <div class="action-card rounded-lg p-6 fade-in">
+                    <div class="text-red-500 text-4xl mb-4">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold matrix-font mb-3">Donate</h3>
+                    <p class="mb-6">Support our monitoring and documentation efforts with a one-time or recurring donation to fund our operations.</p>
+                    <a href="/get-involved" class="btn-primary inline-block px-6 py-2 rounded-md">Donate Now</a>
+                </div>
+                
+                <div class="action-card rounded-lg p-6 fade-in">
+                    <div class="text-red-500 text-4xl mb-4">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold matrix-font mb-3">Volunteer</h3>
+                    <p class="mb-6">Join our team of volunteers to help with research, translation, outreach, and other critical tasks.</p>
+                    <a href="/get-involved" class="btn-primary inline-block px-6 py-2 rounded-md">Join Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Admin Quick Navigation (only if logged in as admin) -->
+    <% if (typeof user !== 'undefined' && user) { %>
+    <div class="container mx-auto px-4 pt-36 pb-4">
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold matrix-font text-green-400 mb-4">Admin Shortcuts</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <a href="/admin" class="bg-black bg-opacity-80 p-6 rounded-lg border border-green-400/30 hover:bg-gray-900 transition">
+                    <h3 class="text-xl font-bold matrix-font text-green-400 mb-2">Admin Dashboard</h3>
+                    <p>Overview and quick access to admin features.</p>
+                </a>
+                <a href="/admin/atrocities" class="bg-black bg-opacity-80 p-6 rounded-lg border border-green-400/30 hover:bg-gray-900 transition">
+                    <h3 class="text-xl font-bold matrix-font text-green-400 mb-2">Manage Live Atrocities</h3>
+                    <p>View, add, and edit live atrocities.</p>
+                </a>
+                <a href="/admin/types" class="bg-black bg-opacity-80 p-6 rounded-lg border border-green-400/30 hover:bg-gray-900 transition">
+                    <h3 class="text-xl font-bold matrix-font text-green-400 mb-2">Manage Atrocity Types</h3>
+                    <p>View, add, edit, or delete atrocity types.</p>
+                </a>
+                <a href="/admin/publications" class="bg-black bg-opacity-80 p-6 rounded-lg border border-green-400/30 hover:bg-gray-900 transition">
+                    <h3 class="text-xl font-bold matrix-font text-green-400 mb-2">Manage Publications</h3>
+                    <p>View, add, edit, or delete publications.</p>
+                </a>
+                <a href="/admin/press-releases" class="bg-black bg-opacity-80 p-6 rounded-lg border border-green-400/30 hover:bg-gray-900 transition">
+                    <h3 class="text-xl font-bold matrix-font text-green-400 mb-2">Manage Press Releases</h3>
+                    <p>View, add, edit, or delete press releases.</p>
+                </a>
+                <a href="/admin/publication-logs" class="bg-black bg-opacity-80 p-6 rounded-lg border border-green-400/30 hover:bg-gray-900 transition">
+                    <h3 class="text-xl font-bold matrix-font text-green-400 mb-2">Publication Logs</h3>
+                    <p>View logs for publications and press releases.</p>
+                </a>
+                <a href="/admin/security" class="bg-black bg-opacity-80 p-6 rounded-lg border border-green-400/30 hover:bg-gray-900 transition">
+                    <h3 class="text-xl font-bold matrix-font text-green-400 mb-2">Security Settings</h3>
+                    <p>Change your password and manage security settings.</p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <% } %>
+    
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMenuButton = document.getElementById('close-menu-button');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            menuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            menuOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        });
+        
+        menuOverlay.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            menuOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        });
+        
+        // Hero Image Slider with Glitch Effect
+        const heroImages = document.querySelectorAll('.hero-image');
+        const slogans = document.querySelectorAll('.slogan');
+        let currentImageIndex = 0;
+        
+        function changeHeroImage() {
+            // Hide all images and slogans
+            heroImages.forEach(img => img.classList.remove('active'));
+            slogans.forEach(slogan => slogan.classList.add('hidden'));
+            slogans.forEach(slogan => slogan.classList.remove('active'));
+            
+            // Show next image and slogan
+            currentImageIndex = (currentImageIndex + 1) % heroImages.length;
+            heroImages[currentImageIndex].classList.add('active');
+            slogans[currentImageIndex].classList.remove('hidden');
+            slogans[currentImageIndex].classList.add('active');
+        }
+        
+        // Change image every 5 seconds
+        setInterval(changeHeroImage, 5000);
+        
+        // Smooth scroll function
+        function smoothScrollTo(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                window.scrollTo({
+                    top: element.offsetTop - 80, // Offset for header
+                    behavior: 'smooth'
+                });
+            }
+        }
+        
+        // Atrocity data from server
+        const atrocityData = <%- JSON.stringify(atrocities) %>;
+
+        // Initialize Map
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize map
+            const map = L.map('map', {
+                center: [20, 0],
+                zoom: 2,
+                minZoom: 2,
+                maxZoom: 10,
+                zoomControl: true,
+                scrollWheelZoom: true
+            });
+            
+            // Add dark theme map tiles
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(map);
+            
+            // Create SVG overlay for heatmap
+            const heatmapOverlay = L.svg().addTo(map);
+            const heatmapContainer = heatmapOverlay._container;
+            heatmapContainer.setAttribute('class', 'heatmap-layer');
+            heatmapContainer.style.pointerEvents = 'none';
+            
+            // Custom icon for markers
+            const createCustomIcon = (severity) => {
+                let color;
+                switch(severity) {
+                    case 'critical':
+                        color = '#ff0000';
+                        break;
+                    case 'high':
+                        color = '#ff3b30';
+                        break;
+                    case 'medium':
+                        color = '#ff9500';
+                        break;
+                    default:
+                        color = '#ffcc00';
+                }
+                
+                return L.divIcon({
+                    html: `
+                        <svg width="50" height="50" viewBox="0 0 50 50" class="marker-svg">
+                            <circle cx="25" cy="25" r="8" fill="${color}" class="marker-center" />
+                            <circle cx="25" cy="25" r="15" stroke="${color}" stroke-width="2" stroke-dasharray="2 2" fill="none" class="marker-pulse">
+                                <animate attributeName="r" values="15;25;15" dur="4s" repeatCount="indefinite"></animate>
+                                <animate attributeName="opacity" values="1;0;1" dur="4s" repeatCount="indefinite"></animate>
+                            </circle>
+                        </svg>
+                    `,
+                    className: 'custom-marker',
+                    iconSize: [50, 50],
+                    iconAnchor: [25, 25]
+                });
+            };
+            
+            // Store markers for later reference
+            const markers = [];
+            
+            // Incident modal elements
+            const incidentModal = document.getElementById('incident-modal');
+            const closeModalBtn = document.querySelector('.close-modal');
+            const incidentTitle = document.getElementById('incident-title');
+            const typewriterText = document.getElementById('typewriter-text');
+            const incidentLocation = document.getElementById('incident-location');
+            const incidentSeverity = document.getElementById('incident-severity');
+            const incidentType = document.getElementById('incident-type');
+            const incidentAffected = document.getElementById('incident-affected');
+            const incidentStatus = document.getElementById('incident-status');
+            const incidentUpdated = document.getElementById('incident-updated');
+            const viewReportBtn = document.getElementById('view-report-btn');
+            const takeActionBtn = document.getElementById('take-action-btn');
+            
+            // Close modal function
+            function closeModal() {
+                incidentModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            // Close modal on button click
+            closeModalBtn.addEventListener('click', closeModal);
+            
+            // Close modal on ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && incidentModal.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+            
+            // Modal action buttons
+            viewReportBtn.addEventListener('click', () => {
+                closeModal();
+                smoothScrollTo('statistics');
+            });
+            
+            takeActionBtn.addEventListener('click', () => {
+                closeModal();
+                smoothScrollTo('action');
+            });
+            
+            // Improved typewriter effect function with proper cursor
+            function typeWriter(text, element, speed = 30) {
+                element.textContent = '';
+                let i = 0;
+                
+                function type() {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    }
+                }
+                
+                type();
+            }
+            
+            // Add markers to map
+            atrocityData.forEach(incident => {
+                const marker = L.marker(incident.location, {
+                    icon: createCustomIcon(incident.severity)
+                }).addTo(map);
+                
+                markers.push({ marker, data: incident });
+                
+                marker.on('click', () => {
+                    incidentTitle.textContent = incident.title;
+
+                    // Use incident.type.type if populated, else fallback
+                    incidentLocation.textContent = incident.locationName || "Unknown";
+                    const severityClass = `severity-${incident.severity}`;
+                    incidentSeverity.innerHTML = `<span class="severity-indicator ${severityClass}"></span> ${incident.severity.charAt(0).toUpperCase() + incident.severity.slice(1)}`;
+                    incidentType.textContent = (incident.type && incident.type.type) ? incident.type.type : (incident.type || "");
+                    incidentAffected.textContent = incident.affected;
+                    incidentStatus.textContent = incident.status;
+                    const date = new Date(incident.updated);
+                    const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    incidentUpdated.textContent = formattedDate;
+                    incidentModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    typeWriter(incident.detailedDescription, typewriterText, 20);
+                });
+            });
+            
+            // Function to update heatmap based on zoom level
+            function updateHeatmap() {
+                // Clear existing heatmap
+                while (heatmapContainer.firstChild) {
+                    heatmapContainer.removeChild(heatmapContainer.firstChild);
+                }
+                
+                const currentZoom = map.getZoom();
+                
+                // Toggle visibility of markers and heatmap based on zoom level
+                markers.forEach(({marker, data}) => {
+                    const markerElement = marker.getElement();
+                    
+                    if (currentZoom >= 4) {
+                        // Hide markers at zoom level 4+
+                        if (markerElement) {
+                            const svgElement = markerElement.querySelector('.marker-svg');
+                            if (svgElement) {
+                                svgElement.style.opacity = '0';
+                            }
+                        }
+                    } else {
+                        // Show markers at zoom level 0-3
+                        if (markerElement) {
+                            const svgElement = markerElement.querySelector('.marker-svg');
+                            if (svgElement) {
+                                svgElement.style.opacity = '1';
+                            }
+                        }
+                    }
+                });
+                
+                // Only show heatmap at zoom level 4 or higher
+                if (currentZoom >= 4) {
+                    heatmapContainer.classList.add('heatmap-visible');
+                    
+                    // Create heatmap for each incident
+                    markers.forEach(({marker, data}) => {
+                        // Only create heatmap for markers in the current view
+                        if (map.getBounds().contains(marker.getLatLng())) {
+                            // Get color based on severity
+                            let color;
+                            switch(data.severity) {
+                                case 'critical':
+                                    color = '#ff0000';
+                                    break;
+                                case 'high':
+                                    color = '#ff3b30';
+                                    break;
+                                case 'medium':
+                                    color = '#ff9500';
+                                    break;
+                                default:
+                                    color = '#ffcc00';
+                            }
+                            
+                            // Create heatmap group
+                            const heatmapGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                            
+                            // Create gradient definitions if they don't exist
+                            if (!document.getElementById(`gradient-${data.severity}-${data.type}`)) {
+                                const defs = document.getElementById('heatmap-gradients') || document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                                if (!defs.id) {
+                                    defs.id = 'heatmap-gradients';
+                                    heatmapContainer.appendChild(defs);
+                                }
+                                
+                                const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
+                                gradient.id = `gradient-${data.severity}-${data.type}`;
+                                gradient.setAttribute('cx', '50%');
+                                gradient.setAttribute('cy', '50%');
+                                gradient.setAttribute('r', '50%');
+                                
+                                const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                                stop1.setAttribute('offset', '0%');
+                                stop1.setAttribute('stop-color', color);
+                                stop1.setAttribute('stop-opacity', '0.8');
+                                
+                                const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                                stop2.setAttribute('offset', '50%');
+                                stop2.setAttribute('stop-color', color);
+                                stop2.setAttribute('stop-opacity', '0.4');
+                                
+                                const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                                stop3.setAttribute('offset', '100%');
+                                stop3.setAttribute('stop-color', color);
+                                stop3.setAttribute('stop-opacity', '0');
+                                
+                                gradient.appendChild(stop1);
+                                gradient.appendChild(stop2);
+                                gradient.appendChild(stop3);
+                                defs.appendChild(gradient);
+                            }
+                            
+                            // Add heatmap points
+                            data.heatmap.forEach(point => {
+                                const latLng = L.latLng(point.lat, point.long);
+                                const pointPos = map.latLngToLayerPoint(latLng);
+                                
+                                // Calculate radius based on zoom level and affected value
+                                const zoomFactor = Math.pow(1.5, currentZoom - 4); // Increase size with zoom
+                                const baseRadius = point.affected / 4 * zoomFactor;
+                                
+                                // Create gradient radial heatmap point
+                                const heatCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                                heatCircle.setAttribute('cx', pointPos.x);
+                                heatCircle.setAttribute('cy', pointPos.y);
+                                heatCircle.setAttribute('r', baseRadius);
+                                heatCircle.setAttribute('fill', `url(#gradient-${data.severity}-${data.type})`);
+                                heatCircle.setAttribute('opacity', '0.7');
+                                
+                                heatmapGroup.appendChild(heatCircle);
+                            });
+                            
+                            // Add the group to the container
+                            heatmapContainer.appendChild(heatmapGroup);
+                        }
+                    });
+                } else {
+                    heatmapContainer.classList.remove('heatmap-visible');
+                }
+            }
+            
+            // Update heatmap on zoom and move
+            map.on('zoomend', updateHeatmap);
+            map.on('moveend', updateHeatmap);
+            
+            // Initial update
+            updateHeatmap();
+            
+            // Handle map responsiveness
+            function handleMapResponsiveness() {
+                const isMobile = window.innerWidth < 768;
+                map.scrollWheelZoom.disable();
+                
+                if (!isMobile) {
+                    map.scrollWheelZoom.enable();
+                }
+            }
+            
+            handleMapResponsiveness();
+            window.addEventListener('resize', handleMapResponsiveness);
+            
+            // Fade-in animation for elements
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Counter animation
+            const counters = document.querySelectorAll('.counter');
+            const counterSpeed = 200; // Lower is faster
+            
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = parseInt(counter.getAttribute('data-target'));
+                        const count = parseInt(counter.innerText);
+                        const increment = Math.trunc(target / (2000 / counterSpeed));
+                        
+                        if (count < target) {
+                            counter.innerText = count + increment;
+                            setTimeout(() => {
+                                // Recursively call until we reach the target
+                                counterObserver.observe(counter);
+                            }, counterSpeed);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            counters.forEach(counter => {
+                counterObserver.observe(counter);
+            });
+            
+            // Scroll animation for hero section
+            const heroSection = document.querySelector('.hero-section');
+            
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.scrollY;
+                const heroHeight = heroSection.offsetHeight;
+                
+                if (scrollPosition < heroHeight) {
+                    const scale = 1 - (scrollPosition / heroHeight) * 0.3;
+                    const opacity = 1 - (scrollPosition / (heroHeight * 0.7));
+                    
+                    heroSection.style.transform = `scale(${scale})`;
+                    heroSection.style.opacity = opacity;
+                }
+            });
+            
+            // Update incident count in the map info box
+            document.getElementById('incident-count').textContent = atrocityData.length;
+        });
+    </script>
+    <%- include('partials/footer') %>
+</body>
+</html>

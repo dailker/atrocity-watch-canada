@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+<div class="flex items-center justify-center min-h-screen bg-gray-900">
+  <form action="/login" method="POST" class="bg-gray-800 p-8 rounded shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">Admin Login</h2>
+    <% if (typeof error !== 'undefined') { %>
+      <div class="mb-4 text-red-500"><%= error %></div>
+    <% } %>
+    <div class="mb-4">
+      <input name="username" placeholder="Username" required class="w-full p-2 rounded" />
+    </div>
+    <div class="mb-4">
+      <input name="password" type="password" placeholder="Password" required class="w-full p-2 rounded" />
+    </div>
+    <button type="submit" class="btn-primary w-full py-2 rounded">Login</button>
+  </form>
+</div>
+<%- include('partials/footer') %>
